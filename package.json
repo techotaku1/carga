@@ -1,0 +1,134 @@
+{
+  "name": "next-js-boilerplate",
+  "author": "Ixartz (https://github.com/ixartz)",
+  "type": "module",
+  "scripts": {
+    "dev:spotlight": "npx @spotlightjs/spotlight",
+    "dev:next": "next dev",
+    "dev": "run-p db-server:file dev:*",
+    "build:next": "next build",
+    "build-local": "node scripts/build-local.mjs",
+    "build": "run-s db:migrate build:next",
+    "start": "next start",
+    "build-stats": "cross-env ANALYZE=true npm run build",
+    "clean": "rimraf .next out coverage",
+    "lint": "ultracite check --type-aware --type-check",
+    "lint:fix": "ultracite fix --type-aware --type-check",
+    "check:types": "tsc --noEmit --pretty",
+    "check:deps": "knip",
+    "check:i18n": "i18n-check -l src/locales -s es -u src -f next-intl",
+    "commit": "commit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db-server:file": "pglite-server -m 100 --db=local.db --run \"node node_modules/dotenv-cli/cli.js -c -- node node_modules/drizzle-kit/bin.cjs migrate\"",
+    "db-server:memory": "pglite-server -m 100 --run \"node node_modules/dotenv-cli/cli.js -c -- node node_modules/drizzle-kit/bin.cjs migrate\"",
+    "db:up": "drizzle-kit up",
+    "db:generate": "drizzle-kit generate",
+    "db:check": "drizzle-kit check",
+    "db:migrate": "dotenv -c -- drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "storybook": "storybook dev -p 6006",
+    "storybook:test": "vitest run --config .storybook/vitest.config.mts",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@arcjet/next": "^1.4.0",
+    "@clerk/localizations": "^4.7.0",
+    "@clerk/nextjs": "^7.4.2",
+    "@hookform/resolvers": "^5.4.0",
+    "@logtape/logtape": "^2.1.1",
+    "@sentry/nextjs": "^10.56.0",
+    "@t3-oss/env-nextjs": "^0.13.11",
+    "drizzle-orm": "^1.0.0-rc.3",
+    "next": "^16.2.7",
+    "next-intl": "^4.13.0",
+    "pg": "^8.21.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-hook-form": "^7.77.0",
+    "three": "^0.184.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@chromatic-com/playwright": "^0.14.5",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@commitlint/prompt-cli": "^21.0.2",
+    "@electric-sql/pglite-socket": "^0.2.1",
+    "@faker-js/faker": "^10.4.0",
+    "@lingual/i18n-check": "^0.9.5",
+    "@next/bundle-analyzer": "^16.2.7",
+    "@playwright/test": "^1.60.0",
+    "@spotlightjs/spotlight": "^4.11.4",
+    "@storybook/addon-a11y": "^10.4.2",
+    "@storybook/addon-docs": "^10.4.2",
+    "@storybook/addon-vitest": "^10.4.2",
+    "@storybook/nextjs-vite": "^10.4.2",
+    "@swc/helpers": "^0.5.23",
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^25.9.1",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19.2.16",
+    "@types/three": "^0.184.1",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vitest/browser": "^4.1.8",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.8",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "checkly": "^8.5.0",
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
+    "drizzle-kit": "^1.0.0-rc.3",
+    "knip": "^6.15.0",
+    "lefthook": "^2.1.9",
+    "npm-run-all": "^4.1.5",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
+    "oxlint-tsgolint": "^0.23.0",
+    "rimraf": "^6.1.3",
+    "semantic-release": "^25.0.3",
+    "storybook": "^10.4.2",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "ultracite": "^7.8.1",
+    "vitest": "^4.1.8",
+    "vitest-browser-react": "^2.2.0"
+  },
+  "overrides": {
+    "fast-uri": "^3.1.2"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits"
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "allowScripts": {
+    "@clerk/shared@4.14.0": true,
+    "@parcel/watcher@2.5.6": true,
+    "@sentry/cli@2.58.6": true,
+    "esbuild@0.27.7": true,
+    "esbuild@0.25.12": true,
+    "lefthook@2.1.9": true,
+    "sharp@0.34.5": true,
+    "esbuild@0.28.0": true,
+    "@swc/core@1.15.40": true
+  },
+  "postcss": {
+    "plugins": {
+      "@tailwindcss/postcss": {}
+    }
+  }
+}

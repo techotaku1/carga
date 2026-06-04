@@ -1,0 +1,61 @@
+strict_tdd: true
+context: |
+  next-js-boilerplate is a Node.js/TypeScript ESM, React, Next.js, Node.js/TypeScript project.
+  Detected markers: package.json, tsconfig.json, npm package manager, .agents\skills\clerk-nextjs-patterns\templates\nextjs-basic-auth/package.json, .agents\skills\clerk-nextjs-patterns\templates\nextjs-basic-auth/tsconfig.json, .agents\skills\clerk-nextjs-patterns\templates\nextjs-basic-auth/npm package manager, .agents\skills\clerk-react-patterns\templates\react-basic-auth/package.json, .agents\skills\clerk-react-patterns\templates\react-basic-auth/tsconfig.json, .agents\skills\clerk-react-patterns\templates\react-basic-auth/npm package manager, GitHub Actions.
+  Package managers: npm.
+  Additional evidence: Test-like files detected (3); examples: src\templates\BaseTemplate.test.tsx, src\utils\Helpers.test.ts, tests\integration\Counter.spec.ts.
+  Primary test command: npm test.
+  Unit tests: Vitest (npm test).
+  Integration tests: none.
+  E2E tests: Playwright (npm run test:e2e).
+rules:
+  proposal:
+    require_problem_statement: true
+  spec:
+    require_acceptance_criteria: true
+  design:
+    require_tradeoffs: true
+  tasks:
+    protect_review_workload: true
+  apply:
+    test_command: "npm test"
+  verify:
+    test_command: "npm test"
+testing:
+  detected: "2026-06-04"
+  runner:
+    command: "npm test"
+    framework: "Vitest"
+  layers:
+    unit: "Vitest"
+    integration: ""
+    e2e: "Playwright"
+  commands:
+    unit:
+      - scope: "."
+        command: "npm test"
+        framework: "Vitest"
+    integration:
+      []
+    e2e:
+      - scope: "."
+        command: "npm run test:e2e"
+        framework: "Playwright"
+  coverage:
+    command: ""
+    commands:
+      []
+quality:
+  lint: "npm run lint"
+  lint_commands:
+    - scope: "."
+      command: "npm run lint"
+      framework: "linter"
+  typecheck: "npm run check:types"
+  typecheck_commands:
+    - scope: "."
+      command: "npm run check:types"
+      framework: "type checker"
+  format: ""
+  format_commands:
+    []
