@@ -143,5 +143,10 @@
   },
   "LocaleSwitcher": {
     "change_language": "Change language"
+  },
+  "AuthLayout": {
+    "eyebrow": "Fleet operations",
+    "title": "Every load, accounted for.",
+    "description": "Report loads, incidents, and freight value — month by month."
   }
 }

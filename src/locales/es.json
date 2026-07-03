@@ -143,5 +143,10 @@
   },
   "LocaleSwitcher": {
     "change_language": "Cambiar idioma"
+  },
+  "AuthLayout": {
+    "eyebrow": "Operación de flota",
+    "title": "Cada carga, contada.",
+    "description": "Registra cargas, novedades y valor del flete, mes a mes."
   }
 }

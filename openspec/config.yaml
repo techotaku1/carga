@@ -18,44 +18,41 @@ rules:
   tasks:
     protect_review_workload: true
   apply:
-    test_command: "npm test"
+    test_command: 'npm test'
   verify:
-    test_command: "npm test"
+    test_command: 'npm test'
 testing:
-  detected: "2026-06-04"
+  detected: '2026-06-04'
   runner:
-    command: "npm test"
-    framework: "Vitest"
+    command: 'npm test'
+    framework: 'Vitest'
   layers:
-    unit: "Vitest"
-    integration: ""
-    e2e: "Playwright"
+    unit: 'Vitest'
+    integration: ''
+    e2e: 'Playwright'
   commands:
     unit:
-      - scope: "."
-        command: "npm test"
-        framework: "Vitest"
-    integration:
-      []
+      - scope: '.'
+        command: 'npm test'
+        framework: 'Vitest'
+    integration: []
     e2e:
-      - scope: "."
-        command: "npm run test:e2e"
-        framework: "Playwright"
+      - scope: '.'
+        command: 'npm run test:e2e'
+        framework: 'Playwright'
   coverage:
-    command: ""
-    commands:
-      []
+    command: ''
+    commands: []
 quality:
-  lint: "npm run lint"
+  lint: 'npm run lint'
   lint_commands:
-    - scope: "."
-      command: "npm run lint"
-      framework: "linter"
-  typecheck: "npm run check:types"
+    - scope: '.'
+      command: 'npm run lint'
+      framework: 'linter'
+  typecheck: 'npm run check:types'
   typecheck_commands:
-    - scope: "."
-      command: "npm run check:types"
-      framework: "type checker"
-  format: ""
-  format_commands:
-    []
+    - scope: '.'
+      command: 'npm run check:types'
+      framework: 'type checker'
+  format: ''
+  format_commands: []
