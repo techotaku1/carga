@@ -68,3 +68,6 @@ build-archive.log
 
 .vercel
 .env*
+
+# Playwright MCP test artifacts
+.playwright-mcp/
