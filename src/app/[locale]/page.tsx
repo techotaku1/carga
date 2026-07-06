@@ -32,18 +32,12 @@ export default async function IndexPage(props: IndexPageProps) {
       <h1 className="text-4xl font-bold text-gray-900">{t('title')}</h1>
       <p className="mt-4 max-w-xl text-xl text-gray-700">{t('description')}</p>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+      <div className="mt-8">
         <Link
           href="/sign-in"
           className="rounded-lg bg-blue-700 px-6 py-3 font-semibold text-white hover:bg-blue-800"
         >
           {t('sign_in_cta')}
-        </Link>
-        <Link
-          href="/sign-up"
-          className="rounded-lg border border-blue-700 px-6 py-3 font-semibold text-blue-700 hover:bg-blue-50"
-        >
-          {t('sign_up_cta')}
         </Link>
       </div>
     </div>

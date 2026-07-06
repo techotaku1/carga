@@ -5,8 +5,7 @@
     "counter_link": "Contador",
     "portfolio_link": "Portafolio",
     "solar_system_link": "Sistema solar",
-    "sign_in_link": "Iniciar sesión",
-    "sign_up_link": "Registrarse"
+    "sign_in_link": "Iniciar sesión"
   },
   "BaseTemplate": {
     "description": "Código inicial para tu Next.js Boilerplate con Tailwind CSS",
@@ -23,8 +22,7 @@
     "meta_description": "Registra cargas, controla el valor del flete y revisa los balances mensuales de tu operación de transporte.",
     "title": "Reportes de transporte de carga",
     "description": "Registra cargas, controla el valor del flete y revisa los balances mensuales en un solo lugar.",
-    "sign_in_cta": "Iniciar sesión",
-    "sign_up_cta": "Registrarse"
+    "sign_in_cta": "Iniciar sesión"
   },
   "Counter": {
     "meta_title": "Contador",
@@ -92,10 +90,6 @@
   "SignIn": {
     "meta_title": "Iniciar sesión",
     "meta_description": "Inicia sesión en tu cuenta fácilmente con nuestro proceso de acceso intuitivo."
-  },
-  "SignUp": {
-    "meta_title": "Registrarse",
-    "meta_description": "Crea una cuenta fácilmente con nuestro proceso de registro intuitivo."
   },
   "Dashboard": {
     "meta_title": "Reportes de carga",

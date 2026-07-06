@@ -1,7 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 const GRID_CELL_COUNT = 78;
-const FLEET_PLATES = ['NQL417', 'ETL242'];
 
 const PULSE_DELAYS: Record<number, string> = {
   3: '0s',
@@ -50,17 +49,6 @@ export default async function CenteredLayout(props: {
           </p>
           <h2 className="max-w-md text-4xl leading-tight font-bold text-[#f7f5ef]">{t('title')}</h2>
           <p className="max-w-md text-lg text-[#f7f5ef]/70">{t('description')}</p>
-
-          <div className="mt-2 flex gap-3">
-            {FLEET_PLATES.map((plate) => (
-              <span
-                key={plate}
-                className="rounded-md border-2 border-black/60 bg-[#f5c518] px-3 py-1 font-mono text-sm font-bold tracking-[0.2em] text-black shadow-md"
-              >
-                {plate}
-              </span>
-            ))}
-          </div>
         </div>
       </aside>
 
