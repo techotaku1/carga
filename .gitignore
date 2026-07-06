@@ -65,3 +65,6 @@ build-archive.log
 /playwright/.cache/
 
 .atl/
+
+.vercel
+.env*
