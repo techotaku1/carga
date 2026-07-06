@@ -119,21 +119,24 @@
     "column_freight_value": "Freight value",
     "delete_report": "Delete",
     "empty_state": "No reports for this period yet.",
-    "month_filter_label": "Month",
-    "month_filter_all": "All months",
     "balance_month_total": "Month total",
     "balance_month_count": "Loads this month",
     "balance_overall_total": "Overall balance",
     "balance_per_plate": "Per-plate subtotal",
-    "column_actions": "Actions"
+    "column_actions": "Actions",
+    "form_title": "New report",
+    "day_eyebrow": "Operation day",
+    "day_previous": "Previous day",
+    "day_next": "Next day",
+    "day_today": "Today",
+    "day_loads": "Loads",
+    "day_total": "Day total"
   },
   "UserProfile": {
     "meta_title": "User Profile"
   },
   "DashboardLayout": {
-    "dashboard_link": "Dashboard",
-    "user_profile_link": "Manage your account",
-    "sign_out": "Sign out"
+    "header_subtitle": "Cargo reports"
   },
   "LocaleSwitcher": {
     "change_language": "Change language"

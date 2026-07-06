@@ -1,0 +1,101 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e94] [cursor=pointer]:
+    - img [ref=e95]
+  - alert [ref=e98]: Reportes de carga
+  - generic [ref=e186]:
+    - banner [ref=e187]:
+      - generic [ref=e188]:
+        - link "CARGA Reportes de carga" [ref=e189] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=e190]: CARGA
+          - generic [ref=e191]: Reportes de carga
+        - generic [ref=e192]:
+          - combobox "lang-switcher" [ref=e193]:
+            - option "ES" [selected]
+            - option "EN"
+          - button "Abrir menú de usuario" [ref=e195] [cursor=pointer]:
+            - img "'s logo" [ref=e198]
+    - main [ref=e200]:
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - button "Día anterior" [ref=e205]: ‹
+            - generic [ref=e206]:
+              - paragraph [ref=e207]: Día de operación
+              - paragraph [ref=e208]: lunes, 6 de julio de 2026
+            - button "Día siguiente" [ref=e209]: ›
+            - button "Hoy" [ref=e210]
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - paragraph [ref=e213]: Cargas
+              - paragraph [ref=e214]: "1"
+            - generic [ref=e215]:
+              - paragraph [ref=e216]: Total del día
+              - paragraph [ref=e217]: $ 3.200.000
+        - generic [ref=e218]:
+          - heading "Nuevo reporte" [level=2] [ref=e219]
+          - generic [ref=e220]:
+            - generic [ref=e221]:
+              - generic [ref=e222]:
+                - generic [ref=e223]: Placa
+                - combobox "Placa" [ref=e224]:
+                  - option "NQL417" [selected]
+                  - option "ETL242"
+                  - option "Otra"
+              - generic [ref=e225]:
+                - generic [ref=e226]: Fecha
+                - textbox "Fecha" [ref=e227]: 2026-07-06
+              - generic [ref=e228]:
+                - generic [ref=e229]: Número de carga
+                - textbox "Número de carga" [ref=e230]
+              - generic [ref=e231]:
+                - generic [ref=e232]: Empresa
+                - textbox "Empresa" [ref=e233]
+              - generic [ref=e234]:
+                - generic [ref=e235]: Conductor
+                - textbox "Conductor" [ref=e236]
+              - generic [ref=e237]:
+                - generic [ref=e238]: Valor del flete
+                - spinbutton "Valor del flete" [ref=e239]: "0"
+            - generic [ref=e240]:
+              - generic [ref=e241]: Novedad
+              - textbox "Novedad" [ref=e242]
+            - button "Agregar reporte" [active] [ref=e243]
+        - table [ref=e259]:
+          - rowgroup [ref=e260]:
+            - row "Placa Fecha Número de carga Empresa Conductor Novedad Valor del flete Acciones" [ref=e261]:
+              - columnheader "Placa" [ref=e262]
+              - columnheader "Fecha" [ref=e263]
+              - columnheader "Número de carga" [ref=e264]
+              - columnheader "Empresa" [ref=e265]
+              - columnheader "Conductor" [ref=e266]
+              - columnheader "Novedad" [ref=e267]
+              - columnheader "Valor del flete" [ref=e268]
+              - columnheader "Acciones" [ref=e269]
+          - rowgroup [ref=e270]:
+            - row "NQL417 2026-07-06 C-200 Molinos Santa Rosa Pedro Ramírez $ 3.200.000 Eliminar" [ref=e271]:
+              - cell "NQL417" [ref=e272]
+              - cell "2026-07-06" [ref=e273]
+              - cell "C-200" [ref=e274]
+              - cell "Molinos Santa Rosa" [ref=e275]
+              - cell "Pedro Ramírez" [ref=e276]
+              - cell [ref=e277]
+              - cell "$ 3.200.000" [ref=e278]
+              - cell "Eliminar" [ref=e279]:
+                - button "Eliminar" [ref=e280]
+        - generic [ref=e246]:
+          - generic [ref=e247]:
+            - paragraph [ref=e248]: Total del mes
+            - paragraph [ref=e249]: $ 3.200.000
+          - generic [ref=e250]:
+            - paragraph [ref=e251]: Cargas este mes
+            - paragraph [ref=e252]: "1"
+          - generic [ref=e253]:
+            - paragraph [ref=e254]: Balance general
+            - paragraph [ref=e255]: $ 3.200.000
+          - generic [ref=e256]:
+            - paragraph [ref=e257]: Subtotal por placa
+            - list [ref=e281]:
+              - listitem [ref=e282]:
+                - generic [ref=e283]: NQL417
+                - generic [ref=e284]: $ 3.200.000

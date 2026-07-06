@@ -1,0 +1,39 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e84]:
+        - paragraph [ref=e85]: Operación de flota
+        - heading "Cada carga, contada." [level=2] [ref=e86]
+        - paragraph [ref=e87]: Registra cargas, novedades y valor del flete, mes a mes.
+    - main [ref=e88]:
+      - generic [ref=e146]:
+        - generic [ref=e147]:
+          - generic [ref=e149]:
+            - heading "Revise su correo electrónico" [level=1] [ref=e150]
+            - paragraph [ref=e151]: para continuar a carga
+            - paragraph [ref=e153]: preview-check+clerk_test@example.com
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - generic [ref=e157]:
+                - generic:
+                  - group
+                  - textbox "Enter verification code" [active] [ref=e158]
+              - button "¿No recibió un código? Reenviar (30)" [disabled]
+            - paragraph [ref=e161]: Estás iniciando sesión desde un dispositivo nuevo. Estamos pidiendo verificación para mantener tu cuenta segura.
+            - generic [ref=e162]:
+              - button "Continuar" [ref=e163] [cursor=pointer]:
+                - generic [ref=e164]:
+                  - text: Continuar
+                  - img [ref=e165]
+              - link "Usar otro método" [ref=e168] [cursor=pointer]:
+                - /url: http://localhost:3000/sign-in/client-trust
+        - generic [ref=e171]:
+          - generic [ref=e173]:
+            - paragraph [ref=e174]: Secured by
+            - link "Clerk logo" [ref=e175] [cursor=pointer]:
+              - /url: https://go.clerk.com/components
+              - img [ref=e176]
+          - paragraph [ref=e181]: Development mode
+  - button "Open Next.js Dev Tools" [ref=e94] [cursor=pointer]:
+    - img [ref=e95]
+  - alert [ref=e98]

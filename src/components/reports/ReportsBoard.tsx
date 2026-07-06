@@ -5,20 +5,16 @@ import { useEffect, useState } from 'react';
 import type { CargoReport } from './CargoReport';
 import { calculateCargoReportsBalance, filterReportsByMonth } from './cargoReportsBalance';
 import { loadCargoReports, saveCargoReports } from './cargoReportsStorage';
+import { DayNavigator } from './DayNavigator';
 import { MonthlyBalance } from './MonthlyBalance';
+import { shiftIsoDate, todayIsoDate } from './reportDates';
 import { ReportForm } from './ReportForm';
 import { ReportsTable } from './ReportsTable';
-
-const currentMonth = () => new Date().toISOString().slice(0, 7);
-
-const sortByDateAscending = (reports: CargoReport[]) =>
-  [...reports].toSorted((a, b) => a.date.localeCompare(b.date));
 
 export const ReportsBoard = () => {
   const t = useTranslations('ReportsBoard');
   const [reports, setReports] = useState<CargoReport[]>([]);
-  const [month, setMonth] = useState(currentMonth());
-  const [showAllMonths, setShowAllMonths] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(todayIsoDate());
 
   useEffect(() => {
     setReports(loadCargoReports());
@@ -30,6 +26,7 @@ export const ReportsBoard = () => {
       saveCargoReports(next);
       return next;
     });
+    setSelectedDay(report.date);
   };
 
   const handleDelete = (id: string) => {
@@ -40,46 +37,33 @@ export const ReportsBoard = () => {
     });
   };
 
-  const activeMonth = showAllMonths ? undefined : month;
-  const visibleReports = sortByDateAscending(filterReportsByMonth(reports, activeMonth));
-  const monthBalance = calculateCargoReportsBalance(visibleReports);
+  const dayReports = reports.filter((report) => report.date === selectedDay);
+  const dayBalance = calculateCargoReportsBalance(dayReports);
+  const monthReports = filterReportsByMonth(reports, selectedDay.slice(0, 7));
+  const monthBalance = calculateCargoReportsBalance(monthReports);
   const overallTotal = calculateCargoReportsBalance(reports).totalFreightValue;
 
   return (
     <div className="flex flex-col gap-6">
-      <ReportForm onAdd={handleAdd} />
+      <DayNavigator
+        day={selectedDay}
+        loadCount={dayBalance.loadCount}
+        dayTotal={dayBalance.totalFreightValue}
+        onPrevious={() =>{  setSelectedDay((day) => shiftIsoDate(day, -1)); }}
+        onNext={() =>{  setSelectedDay((day) => shiftIsoDate(day, 1)); }}
+        onToday={() =>{  setSelectedDay(todayIsoDate()); }}
+      />
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-        <label htmlFor="month-filter" className="text-sm font-medium text-gray-700">
-          {t('month_filter_label')}
-        </label>
-        <input
-          id="month-filter"
-          type="month"
-          aria-label={t('month_filter_label')}
-          className="rounded-lg border border-gray-300 px-3 py-2"
-          value={month}
-          disabled={showAllMonths}
-          onChange={(event) => {
-            setMonth(event.target.value);
-          }}
-        />
-        <label className="flex items-center gap-2 text-sm text-gray-700">
-          <input
-            type="checkbox"
-            aria-label={t('month_filter_all')}
-            checked={showAllMonths}
-            onChange={(event) => {
-              setShowAllMonths(event.target.checked);
-            }}
-          />
-          {t('month_filter_all')}
-        </label>
-      </div>
+      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">{t('form_title')}</h2>
+        <ReportForm onAdd={handleAdd} />
+      </section>
+
+      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+        <ReportsTable reports={dayReports} onDelete={handleDelete} />
+      </section>
 
       <MonthlyBalance monthBalance={monthBalance} overallTotal={overallTotal} />
-
-      <ReportsTable reports={visibleReports} onDelete={handleDelete} />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import type { CargoReport } from './CargoReport';
+import { todayIsoDate } from './reportDates';
 
 const PLATE_OPTIONS = ['NQL417', 'ETL242'] as const;
 const OTHER_PLATE_VALUE = 'other';
@@ -26,8 +27,6 @@ const reportFormSchema = z
   });
 
 type ReportFormValues = z.infer<typeof reportFormSchema>;
-
-const todayIsoDate = () => new Date().toISOString().slice(0, 10);
 
 const defaultValues: ReportFormValues = {
   plate: PLATE_OPTIONS[0],
@@ -65,7 +64,7 @@ export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-lg border border-gray-300 p-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1">
           <label htmlFor="plate" className="text-sm font-medium text-gray-700">

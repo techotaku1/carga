@@ -16,11 +16,11 @@ export const LocaleSwitcher = () => {
         router.push(pathname, { locale: event.target.value });
         router.refresh();
       }}
-      className="rounded border border-gray-300 px-2 py-1 text-sm font-medium text-gray-700"
+      className="rounded-lg border border-white/15 bg-transparent px-2 py-1 text-sm font-medium text-[#f7f5ef] transition-colors hover:border-[#f5c518]"
       aria-label="lang-switcher"
     >
       {routing.locales.map((option) => (
-        <option key={option} value={option}>
+        <option key={option} value={option} className="text-gray-900">
           {option.toUpperCase()}
         </option>
       ))}

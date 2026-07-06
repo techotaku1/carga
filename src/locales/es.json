@@ -119,21 +119,24 @@
     "column_freight_value": "Valor del flete",
     "delete_report": "Eliminar",
     "empty_state": "Aún no hay reportes para este período.",
-    "month_filter_label": "Mes",
-    "month_filter_all": "Todos los meses",
     "balance_month_total": "Total del mes",
     "balance_month_count": "Cargas este mes",
     "balance_overall_total": "Balance general",
     "balance_per_plate": "Subtotal por placa",
-    "column_actions": "Acciones"
+    "column_actions": "Acciones",
+    "form_title": "Nuevo reporte",
+    "day_eyebrow": "Día de operación",
+    "day_previous": "Día anterior",
+    "day_next": "Día siguiente",
+    "day_today": "Hoy",
+    "day_loads": "Cargas",
+    "day_total": "Total del día"
   },
   "UserProfile": {
     "meta_title": "Perfil de usuario"
   },
   "DashboardLayout": {
-    "dashboard_link": "Panel",
-    "user_profile_link": "Administrar tu cuenta",
-    "sign_out": "Cerrar sesión"
+    "header_subtitle": "Reportes de carga"
   },
   "LocaleSwitcher": {
     "change_language": "Cambiar idioma"
