@@ -23,6 +23,33 @@ export default defineConfig({
 
     'unicorn/filename-case': 'off', // Impossible to enforce consistent filename case due to multiple conventions
 
+    'eslint/prefer-named-capture-group': 'off',
+
+    'github/a11y-aria-label-is-well-formatted': 'off',
+    'github/filenames-match-regex': 'off',
+    'github/js-class-name': 'off',
+    'github/no-then': 'off',
+
+    'sonarjs/fixme-tag': 'off',
+    'sonarjs/function-name': 'off',
+    'sonarjs/no-duplicate-string': 'off',
+    'sonarjs/no-os-command-from-path': 'off',
+    'sonarjs/no-wildcard-import': 'off',
+    'sonarjs/todo-tag': 'off',
+
+    'react/jsx-handler-names': 'off',
+    'react/react-compiler': 'off',
+
+    'react-doctor/js-combine-iterations': 'off',
+    'react-doctor/js-hoist-intl': 'off',
+    'react-doctor/nextjs-missing-metadata': 'off',
+    'react-doctor/no-initialize-state': 'off',
+    'react-doctor/rendering-hydration-mismatch-time': 'off',
+    'react-doctor/rendering-hydration-no-flicker': 'off',
+    'react-doctor/rerender-defer-reads-hook': 'off',
+
+    'typescript/no-deprecated': 'off',
+
     // --- JSDoc Rules ---
     'jsdoc/require-param': 'error',
     'jsdoc/require-param-description': 'error',

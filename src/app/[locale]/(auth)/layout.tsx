@@ -20,8 +20,6 @@ export default async function AuthLayout(props: {
     dashboardUrl = `/${locale}${dashboardUrl}`;
   }
 
-  const afterSignOutUrl = signInUrl;
-
   return (
     <ClerkProvider
       appearance={{
@@ -30,7 +28,6 @@ export default async function AuthLayout(props: {
       localization={clerkLocale}
       signInUrl={signInUrl}
       signInFallbackRedirectUrl={dashboardUrl}
-      afterSignOutUrl={afterSignOutUrl}
     >
       {props.children}
     </ClerkProvider>

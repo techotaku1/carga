@@ -14,10 +14,14 @@ const config: KnipConfig = {
     '@commitlint/types',
     '@clerk/shared',
     '@swc/helpers', // Avoid error in CI: "`npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync."
+    'eslint-plugin-github',
+    'eslint-plugin-sonarjs',
+    'oxlint-plugin-react-doctor',
   ],
   // Binaries to ignore during analysis
   ignoreBinaries: [
     'production', // False positive raised with dotenv-cli
+    'taskkill', // Windows system binary used by the local build helper.
   ],
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/gu)].join('\n'),

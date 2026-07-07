@@ -22,6 +22,9 @@ const baseConfig: NextConfig = {
   },
   turbopack: {
     root: projectRoot,
+    resolveAlias: {
+      '@arcjet/analyze-wasm': './node_modules/@arcjet/analyze-wasm/dist/edge-light.js',
+    },
   },
 };
 

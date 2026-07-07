@@ -16,6 +16,10 @@
   animation: auth-cell-pulse 7s ease-in-out infinite;
 }
 
+.cl-footerItem {
+  display: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .auth-cell-pulse {
     animation: none;
