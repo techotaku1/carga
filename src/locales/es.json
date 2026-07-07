@@ -17,13 +17,6 @@
     "meta_description": "Next js Boilerplate es el código inicial perfecto para tu proyecto. Crea tu aplicación React con el framework Next.js.",
     "sponsors_title": "Patrocinadores"
   },
-  "IndexPage": {
-    "meta_title": "Reportes de transporte de carga",
-    "meta_description": "Registra cargas, controla el valor del flete y revisa los balances mensuales de tu operación de transporte.",
-    "title": "Reportes de transporte de carga",
-    "description": "Registra cargas, controla el valor del flete y revisa los balances mensuales en un solo lugar.",
-    "sign_in_cta": "Iniciar sesión"
-  },
   "Counter": {
     "meta_title": "Contador",
     "meta_description": "Un ejemplo de operación de base de datos",
@@ -128,9 +121,16 @@
     "day_eyebrow": "Día de operación",
     "day_previous": "Día anterior",
     "day_next": "Día siguiente",
-    "day_today": "Hoy",
     "day_loads": "Cargas",
-    "day_total": "Total del día"
+    "day_total": "Total del día",
+    "day_latest": "Último",
+    "drawer_close": "Cerrar",
+    "search_label": "Buscar",
+    "search_placeholder": "Placa, empresa, conductor, número de carga…",
+    "search_from": "Desde",
+    "search_to": "Hasta",
+    "search_clear": "Limpiar",
+    "search_results": "Resultados"
   },
   "UserProfile": {
     "meta_title": "Perfil de usuario"

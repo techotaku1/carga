@@ -17,13 +17,6 @@
     "meta_description": "Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework.",
     "sponsors_title": "Sponsors"
   },
-  "IndexPage": {
-    "meta_title": "Cargo transport reports",
-    "meta_description": "Track cargo loads, freight values, and monthly balances for your transport operation.",
-    "title": "Cargo transport reports",
-    "description": "Record loads, track freight values, and review monthly balances in one place.",
-    "sign_in_cta": "Sign in"
-  },
   "Counter": {
     "meta_title": "Counter",
     "meta_description": "An example of DB operation",
@@ -128,9 +121,16 @@
     "day_eyebrow": "Operation day",
     "day_previous": "Previous day",
     "day_next": "Next day",
-    "day_today": "Today",
     "day_loads": "Loads",
-    "day_total": "Day total"
+    "day_total": "Day total",
+    "day_latest": "Latest",
+    "drawer_close": "Close",
+    "search_label": "Search",
+    "search_placeholder": "Plate, company, driver, load number…",
+    "search_from": "From",
+    "search_to": "To",
+    "search_clear": "Clear",
+    "search_results": "Results"
   },
   "UserProfile": {
     "meta_title": "User Profile"

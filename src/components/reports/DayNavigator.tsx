@@ -12,9 +12,11 @@ export const DayNavigator = (props: {
   day: string;
   loadCount: number;
   dayTotal: number;
+  hasPrevious: boolean;
+  hasNext: boolean;
   onPrevious: () => void;
   onNext: () => void;
-  onToday: () => void;
+  onLatest: () => void;
 }) => {
   const t = useTranslations('ReportsBoard');
   const locale = useLocale();
@@ -26,7 +28,7 @@ export const DayNavigator = (props: {
   }).format(new Date(`${props.day}T00:00:00`));
 
   const navButtonClass =
-    'flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-xl text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518]';
+    'flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 text-xl text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15 disabled:hover:text-[#f7f5ef]';
 
   return (
     <section className="flex flex-col gap-4 rounded-xl bg-[#14161b] px-5 py-4 text-[#f7f5ef] sm:flex-row sm:items-center sm:justify-between">
@@ -35,6 +37,7 @@ export const DayNavigator = (props: {
           type="button"
           aria-label={t('day_previous')}
           className={navButtonClass}
+          disabled={!props.hasPrevious}
           onClick={props.onPrevious}
         >
           ‹
@@ -49,16 +52,18 @@ export const DayNavigator = (props: {
           type="button"
           aria-label={t('day_next')}
           className={navButtonClass}
+          disabled={!props.hasNext}
           onClick={props.onNext}
         >
           ›
         </button>
         <button
           type="button"
-          className="ml-1 rounded-lg border border-white/15 px-3 py-2 text-sm font-medium transition-colors hover:border-[#f5c518] hover:text-[#f5c518]"
-          onClick={props.onToday}
+          className="ml-1 rounded-lg border border-white/15 px-3 py-2 text-sm font-medium transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30"
+          disabled={!props.hasNext}
+          onClick={props.onLatest}
         >
-          {t('day_today')}
+          {t('day_latest')}
         </button>
       </div>
 

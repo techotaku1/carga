@@ -22,3 +22,22 @@
     background-color: rgb(245 197 24 / 12%);
   }
 }
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.drawer-slide-in {
+  animation: drawer-slide-in 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-slide-in {
+    animation: none;
+  }
+}
