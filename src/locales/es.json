@@ -1,94 +1,15 @@
 {
-  "RootLayout": {
-    "home_link": "Inicio",
-    "about_link": "Acerca de",
-    "counter_link": "Contador",
-    "portfolio_link": "Portafolio",
-    "solar_system_link": "Sistema solar",
-    "sign_in_link": "Iniciar sesión"
-  },
   "BaseTemplate": {
     "description": "Código inicial para tu Next.js Boilerplate con Tailwind CSS",
     "footer_text": "© {year} {name}. Hecho con <author></author>.",
     "main_navigation_label": "Navegación principal"
-  },
-  "Index": {
-    "meta_title": "Presentación de Next.js Boilerplate",
-    "meta_description": "Next js Boilerplate es el código inicial perfecto para tu proyecto. Crea tu aplicación React con el framework Next.js.",
-    "sponsors_title": "Patrocinadores"
-  },
-  "Counter": {
-    "meta_title": "Contador",
-    "meta_description": "Un ejemplo de operación de base de datos",
-    "security_powered_by": "Seguridad, detección de bots y limitación de velocidad con tecnología de"
-  },
-  "CounterForm": {
-    "presentation": "El contador se guarda en la base de datos y aumenta con el valor que proporciones.",
-    "label_increment": "Incrementar por",
-    "button_increment": "Incrementar",
-    "error_increment_range": "El valor debe estar entre 1 y 3"
-  },
-  "CurrentCount": {
-    "count": "Conteo: {count}"
-  },
-  "About": {
-    "meta_title": "Acerca de",
-    "meta_description": "Descripción de la página acerca de",
-    "about_paragraph": "¡Bienvenido a nuestra página acerca de! Somos un equipo de personas apasionadas dedicadas a crear software increíble.",
-    "translation_powered_by": "Traducción con tecnología de"
-  },
-  "Portfolio": {
-    "meta_title": "Portafolio",
-    "meta_description": "¡Bienvenido a mi página de portafolio!",
-    "presentation": "¡Bienvenido a mi página de portafolio! Aquí encontrarás una colección cuidadosamente seleccionada de mi trabajo y logros. A través de este portafolio, muestro mi experiencia, creatividad y el valor que puedo aportar a tus proyectos.",
-    "portfolio_name": "Portafolio {name}",
-    "error_reporting_powered_by": "Reporte de errores con tecnología de"
-  },
-  "PortfolioSlug": {
-    "meta_title": "Portafolio {slug}",
-    "meta_description": "Descripción del portafolio {slug}",
-    "header": "Portafolio {slug}",
-    "content": "Creé un conjunto de materiales promocionales y elementos de marca para un evento corporativo. Diseñé un tema visualmente unificado que incluye logo, carteles, banners y recursos digitales. Integré la identidad de marca del cliente con un enfoque contemporáneo e innovador.",
-    "code_review_powered_by": "Revisión de código con tecnología de"
-  },
-  "SolarSystemPage": {
-    "meta_title": "Sistema solar WebGPU configurable",
-    "meta_description": "Demo interactiva de Three.js WebGPU con velocidad, escala, órbitas, etiquetas y enfoque planetario configurables.",
-    "title": "Sistema solar configurable",
-    "subtitle": "Explora un modelo orbital renderizado con Three.js y WebGPU. Ajusta el tiempo, escala los planetas, alterna las capas guía y enfoca la cámara en cualquier cuerpo.",
-    "speed": "Velocidad orbital",
-    "scale": "Escala de planetas",
-    "show_orbits": "Órbitas",
-    "show_labels": "Etiquetas",
-    "focus": "Enfoque de cámara",
-    "overview": "Vista general",
-    "sun": "Sol",
-    "pause": "Pausar",
-    "resume": "Reanudar",
-    "reset": "Restablecer configuración",
-    "loading": "Iniciando renderizador",
-    "webgpu_ready": "WebGPU activo",
-    "webgl_fallback": "Fallback WebGL",
-    "webgpu_unavailable": "WebGPU no disponible",
-    "unsupported": "Esta demo necesita JavaScript y un navegador con soporte gráfico moderno.",
-    "planet_mercury": "Mercurio",
-    "planet_venus": "Venus",
-    "planet_earth": "Tierra",
-    "planet_mars": "Marte",
-    "planet_jupiter": "Júpiter",
-    "planet_saturn": "Saturno",
-    "planet_uranus": "Urano",
-    "planet_neptune": "Neptuno"
   },
   "SignIn": {
     "meta_title": "Iniciar sesión",
     "meta_description": "Inicia sesión en tu cuenta fácilmente con nuestro proceso de acceso intuitivo."
   },
   "Dashboard": {
-    "meta_title": "Reportes de carga",
-    "hello_message": "¡Hola {email}!",
-    "alternative_message": "¿Necesitas funciones avanzadas? Multi-tenancy y equipos, roles y permisos, Shadcn UI, tipado de extremo a extremo con oRPC, pagos con Stripe y modo claro / oscuro. Prueba <url></url>.",
-    "max_message": "O, ¿necesitas una stack de autenticación autoalojada (Better Auth)? Prueba <url></url>."
+    "meta_title": "Reportes de carga"
   },
   "ReportsBoard": {
     "field_plate": "Placa",
@@ -130,16 +51,18 @@
     "search_from": "Desde",
     "search_to": "Hasta",
     "search_clear": "Limpiar",
-    "search_results": "Resultados"
+    "search_results": "Resultados",
+    "driver_add": "+ Añadir conductor",
+    "driver_modal_title": "Crear conductor",
+    "driver_name_label": "Nombre del conductor",
+    "driver_cancel": "Cancelar",
+    "driver_create": "Crear conductor"
   },
   "UserProfile": {
     "meta_title": "Perfil de usuario"
   },
   "DashboardLayout": {
     "header_subtitle": "Reportes de carga"
-  },
-  "LocaleSwitcher": {
-    "change_language": "Cambiar idioma"
   },
   "AuthLayout": {
     "eyebrow": "Operación de flota",

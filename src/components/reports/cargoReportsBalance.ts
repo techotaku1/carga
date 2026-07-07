@@ -1,6 +1,6 @@
 import type { CargoReport } from './CargoReport';
 
-export type PlateSubtotal = {
+type PlateSubtotal = {
   plate: string;
   total: number;
   count: number;

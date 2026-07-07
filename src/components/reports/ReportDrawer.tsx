@@ -36,11 +36,10 @@ export const ReportDrawer = (props: {
         className="absolute inset-0 w-full bg-black/50"
         onClick={props.onClose}
       />
-      <aside
-        role="dialog"
-        aria-modal="true"
+      <dialog
+        open
         aria-label={props.title}
-        className="drawer-slide-in absolute inset-y-0 right-0 flex w-full max-w-md flex-col overflow-y-auto bg-white shadow-2xl"
+        className="drawer-slide-in absolute inset-y-0 right-0 m-0 flex h-full max-h-none w-full max-w-md flex-col overflow-y-auto border-0 bg-white shadow-2xl"
       >
         <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4">
           <h2 className="text-lg font-semibold text-gray-900">{props.title}</h2>
@@ -54,7 +53,7 @@ export const ReportDrawer = (props: {
           </button>
         </div>
         <div className="p-5">{props.children}</div>
-      </aside>
+      </dialog>
     </div>
   );
 };

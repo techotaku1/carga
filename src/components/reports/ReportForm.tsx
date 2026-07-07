@@ -2,13 +2,17 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import type { CargoReport } from './CargoReport';
+import { DriverModal } from './DriverModal';
+import { DEFAULT_DRIVER, DEFAULT_DRIVERS, loadDrivers, saveDrivers } from './driversStorage';
 import { todayIsoDate } from './reportDates';
 
 const PLATE_OPTIONS = ['NQL417', 'ETL242'] as const;
 const OTHER_PLATE_VALUE = 'other';
+const ADD_DRIVER_VALUE = 'add-driver';
 
 const reportFormSchema = z
   .object({
@@ -34,18 +38,42 @@ const defaultValues: ReportFormValues = {
   date: todayIsoDate(),
   loadNumber: '',
   company: '',
-  driver: '',
+  driver: DEFAULT_DRIVER,
   note: '',
   freightValue: 0,
 };
 
 export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
   const t = useTranslations('ReportsBoard');
+  const [drivers, setDrivers] = useState<string[]>(DEFAULT_DRIVERS);
+  const [driverModalOpen, setDriverModalOpen] = useState(false);
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(reportFormSchema),
     defaultValues,
   });
   const selectedPlate = form.watch('plate');
+  const selectedDriver = form.watch('driver');
+  const driverField = form.register('driver');
+
+  useEffect(() => {
+    const storedDrivers = loadDrivers();
+    setDrivers(storedDrivers);
+
+    if (!storedDrivers.includes(form.getValues('driver'))) {
+      form.setValue('driver', storedDrivers[0] ?? DEFAULT_DRIVER);
+    }
+  }, [form]);
+
+  const handleCreateDriver = (name: string) => {
+    const trimmed = name.trim();
+    const existingDriver = drivers.find((driver) => driver.toLowerCase() === trimmed.toLowerCase());
+    const driver = existingDriver ?? trimmed;
+    const nextDrivers = existingDriver ? drivers : [...drivers, driver];
+
+    setDrivers(nextDrivers);
+    saveDrivers(nextDrivers);
+    form.setValue('driver', driver, { shouldValidate: true });
+  };
 
   const onSubmit = form.handleSubmit((values) => {
     const plate = values.plate === OTHER_PLATE_VALUE ? values.otherPlate.trim() : values.plate;
@@ -60,7 +88,7 @@ export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
       note: values.note,
       freightValue: values.freightValue,
     });
-    form.reset(defaultValues);
+    form.reset({ ...defaultValues, driver: values.driver });
   });
 
   return (
@@ -150,12 +178,29 @@ export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
           <label htmlFor="driver" className="text-sm font-medium text-gray-700">
             {t('field_driver')}
           </label>
-          <input
+          <select
             id="driver"
-            type="text"
+            ref={driverField.ref}
+            name={driverField.name}
+            value={selectedDriver}
             className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('driver')}
-          />
+            onBlur={driverField.onBlur}
+            onChange={(event) => {
+              if (event.target.value === ADD_DRIVER_VALUE) {
+                setDriverModalOpen(true);
+                return;
+              }
+
+              form.setValue('driver', event.target.value, { shouldValidate: true });
+            }}
+          >
+            {drivers.map((driver) => (
+              <option key={driver} value={driver}>
+                {driver}
+              </option>
+            ))}
+            <option value={ADD_DRIVER_VALUE}>{t('driver_add')}</option>
+          </select>
           {form.formState.errors.driver && (
             <span className="text-sm text-red-600">{t('error_required')}</span>
           )}
@@ -197,6 +242,14 @@ export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
       >
         {t('add_report')}
       </button>
+
+      <DriverModal
+        open={driverModalOpen}
+        onCreate={handleCreateDriver}
+        onClose={() => {
+          setDriverModalOpen(false);
+        }}
+      />
     </form>
   );
 };
