@@ -38,10 +38,10 @@ export default async function SignInPage(props: SignInPageProps) {
         </p>
         <Image
           alt=""
-          className="mb-2 h-8 w-8 object-contain sm:h-10 sm:w-10"
-          height={40}
+          className="mb-2 h-11 w-11 object-contain sm:h-14 sm:w-14"
+          height={56}
           src="/logo-login-mini.png"
-          width={40}
+          width={56}
         />
       </div>
 
