@@ -28,7 +28,7 @@ export const DayNavigator = (props: {
   }).format(new Date(`${props.day}T00:00:00`));
 
   const navButtonClass =
-    'flex aspect-square h-full items-center justify-center border border-white/15 text-2xl leading-none text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15 disabled:hover:text-[#f7f5ef]';
+    'flex aspect-square h-full items-center justify-center rounded-lg border border-white/15 text-4xl leading-none text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15 disabled:hover:text-[#f7f5ef]';
 
   return (
     <section className="grid gap-4 rounded-xl bg-[#14161b] px-5 py-4 text-[#f7f5ef] sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
@@ -36,7 +36,7 @@ export const DayNavigator = (props: {
         <button
           type="button"
           aria-label={t('day_previous')}
-          className={`${navButtonClass} rounded-lg`}
+          className={navButtonClass}
           disabled={!props.hasPrevious}
           onClick={props.onPrevious}
         >
@@ -48,11 +48,11 @@ export const DayNavigator = (props: {
           </p>
           <p className="text-xl leading-tight font-semibold capitalize sm:text-2xl">{dayLabel}</p>
         </div>
-        <div className="flex items-stretch">
+        <div className="flex items-stretch gap-2">
           <button
             type="button"
             aria-label={t('day_next')}
-            className={`${navButtonClass} rounded-l-lg`}
+            className={navButtonClass}
             disabled={!props.hasNext}
             onClick={props.onNext}
           >
@@ -60,7 +60,7 @@ export const DayNavigator = (props: {
           </button>
           <button
             type="button"
-            className="rounded-r-lg border border-l-0 border-white/15 px-3 py-2 text-sm font-medium transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded-lg border border-white/15 px-3 py-2 text-sm font-medium transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30"
             disabled={!props.hasNext}
             onClick={props.onLatest}
           >
