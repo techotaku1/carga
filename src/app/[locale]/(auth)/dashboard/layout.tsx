@@ -1,6 +1,6 @@
 import { UserButton } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Link } from '@/libs/I18nNavigation';
 
 export default async function DashboardLayout(props: {
@@ -13,6 +13,8 @@ export default async function DashboardLayout(props: {
     locale,
     namespace: 'DashboardLayout',
   });
+  const user = await currentUser();
+  const displayName = user?.fullName ?? user?.username ?? '';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -27,8 +29,12 @@ export default async function DashboardLayout(props: {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4">
-            <LocaleSwitcher />
+          <div className="flex items-center gap-3">
+            {displayName && (
+              <span className="hidden text-sm font-medium text-[#f7f5ef] sm:inline">
+                {displayName}
+              </span>
+            )}
             <UserButton />
           </div>
         </div>
