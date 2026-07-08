@@ -31,22 +31,18 @@ export default async function SignInPage(props: SignInPageProps) {
   const dashboardUrl = getI18nPath('/dashboard', locale);
 
   return (
-    <section className="flex w-full max-w-md flex-col items-center gap-6">
-      <div className="flex flex-col items-center gap-3 rounded-[2rem] border border-[#f5c518]/25 bg-white p-5 text-center shadow-xl shadow-[#0b2233]/10">
+    <div className="flex w-full max-w-md flex-col items-center gap-12">
+      <div className="flex items-end gap-1">
+        <p className="bg-gradient-to-br from-[#0c2434] to-[#f5c518] bg-clip-text pb-2 text-center text-5xl leading-[1.2] font-extrabold tracking-tight text-transparent sm:text-6xl">
+          {t('brand_title')}
+        </p>
         <Image
-          src="/logo-login.png"
-          width={136}
-          height={136}
-          alt="Carga"
-          className="h-28 w-28 rounded-3xl object-contain sm:h-[8.5rem] sm:w-[8.5rem]"
-          preload
+          alt=""
+          className="mb-2 h-8 w-8 object-contain sm:h-10 sm:w-10"
+          height={40}
+          src="/logo-login-mini.png"
+          width={40}
         />
-        <div className="space-y-1">
-          <p className="text-xl font-bold tracking-tight text-[#0c2434]">{t('brand_title')}</p>
-          <p className="text-sm font-semibold tracking-[0.18em] text-[#64748b] uppercase">
-            {t('form_title')}
-          </p>
-        </div>
       </div>
 
       <SignIn
@@ -56,13 +52,15 @@ export default async function SignInPage(props: SignInPageProps) {
           options: {
             animations: true,
             elevation: 'raised',
+            logoImageUrl: '/logo-login.png',
+            logoPlacement: 'inside',
             socialButtonsPlacement: 'bottom',
             socialButtonsVariant: 'blockButton',
           },
           variables: {
             borderRadius: '0.95rem',
             colorBackground: '#ffffff',
-            colorBorder: 'rgba(12, 36, 52, 0.14)',
+            colorBorder: 'rgba(12, 36, 52, 0.35)',
             colorForeground: '#0c2434',
             colorInput: '#ffffff',
             colorInputForeground: '#0c2434',
@@ -75,17 +73,19 @@ export default async function SignInPage(props: SignInPageProps) {
             fontFamily: 'inherit',
           },
           elements: {
-            cardBox: 'border border-[#0c2434]/10 shadow-2xl shadow-[#0c2434]/15',
+            cardBox: 'w-full max-w-md border border-[#0c2434]/10 shadow-2xl shadow-[#0c2434]/15',
             footer: 'hidden',
             formButtonPrimary:
               'bg-[#f5c518] text-[#0c1117] shadow-md shadow-[#f5c518]/25 hover:bg-[#e3b512] focus:bg-[#e3b512]',
-            headerSubtitle: 'hidden',
-            headerTitle: 'hidden',
-            logoBox: 'hidden',
-            rootBox: 'w-full',
+            formFieldInput: 'border border-[#0c2434]/35 focus:border-[#f5c518]',
+            header:
+              'flex flex-col items-center text-center [&>div:last-of-type]:text-sm [&>div:last-of-type]:font-semibold [&>div:last-of-type]:tracking-[0.18em] [&>div:last-of-type]:text-[#64748b] [&>div:last-of-type]:uppercase',
+            logoBox: 'h-28 w-28 items-center justify-center sm:h-[8.5rem] sm:w-[8.5rem]',
+            logoImage: 'h-28 w-28 rounded-3xl object-contain sm:h-[8.5rem] sm:w-[8.5rem]',
+            rootBox: 'w-full max-w-md',
           },
         }}
       />
-    </section>
+    </div>
   );
 }

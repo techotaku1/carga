@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/libs/I18nRouting';
 import { ClerkLocalizations } from '@/utils/AppConfig';
 
@@ -12,6 +12,19 @@ export default async function AuthLayout(props: {
 
   const clerkLocale =
     ClerkLocalizations.supportedLocales[locale] ?? ClerkLocalizations.defaultLocale;
+  const t = await getTranslations({ locale, namespace: 'SignIn' });
+  const localization = {
+    ...clerkLocale,
+    signIn: {
+      ...clerkLocale.signIn,
+      start: {
+        ...clerkLocale.signIn?.start,
+        subtitle: t('form_title'),
+        title: t('brand_title'),
+        titleCombined: t('form_title'),
+      },
+    },
+  };
   let signInUrl = '/sign-in';
   let dashboardUrl = '/dashboard';
 
@@ -25,7 +38,7 @@ export default async function AuthLayout(props: {
       appearance={{
         cssLayerName: 'clerk', // Ensure Clerk is compatible with Tailwind CSS v4
       }}
-      localization={clerkLocale}
+      localization={localization}
       signInUrl={signInUrl}
       signInFallbackRedirectUrl={dashboardUrl}
     >
