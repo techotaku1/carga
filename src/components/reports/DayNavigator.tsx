@@ -28,7 +28,7 @@ export const DayNavigator = (props: {
   }).format(new Date(`${props.day}T00:00:00`));
 
   const navButtonClass =
-    'flex aspect-square h-full items-center justify-center rounded-lg border border-white/15 text-4xl leading-none text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15 disabled:hover:text-[#f7f5ef]';
+    'flex aspect-square h-full items-center justify-center rounded-lg border border-white/15 text-[#f7f5ef] transition-colors hover:border-[#f5c518] hover:text-[#f5c518] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15 disabled:hover:text-[#f7f5ef]';
 
   return (
     <section className="grid gap-4 rounded-xl bg-[#14161b] px-5 py-4 text-[#f7f5ef] sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
@@ -40,7 +40,18 @@ export const DayNavigator = (props: {
           disabled={!props.hasPrevious}
           onClick={props.onPrevious}
         >
-          ‹
+          <svg
+            aria-hidden="true"
+            className="h-7 w-7"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+          >
+            <path d="M15 18 9 12l6-6" />
+          </svg>
         </button>
         <div className="flex min-w-0 flex-col justify-center rounded-lg border border-white/15 px-4 py-2 text-center">
           <p className="text-xs font-semibold tracking-[0.2em] text-[#f5c518] uppercase">
@@ -56,7 +67,18 @@ export const DayNavigator = (props: {
             disabled={!props.hasNext}
             onClick={props.onNext}
           >
-            ›
+            <svg
+              aria-hidden="true"
+              className="h-7 w-7"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
           </button>
           <button
             type="button"
