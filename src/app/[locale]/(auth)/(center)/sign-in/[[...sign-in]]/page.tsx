@@ -48,6 +48,8 @@ export default async function SignInPage(props: SignInPageProps) {
       <SignIn
         path={getI18nPath('/sign-in', locale)}
         fallbackRedirectUrl={dashboardUrl}
+        transferable={false}
+        withSignUp={false}
         appearance={{
           options: {
             animations: true,

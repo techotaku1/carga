@@ -19,8 +19,8 @@ export default async function AuthLayout(props: {
       ...clerkLocale.signIn,
       start: {
         ...clerkLocale.signIn?.start,
-        subtitle: t('form_title'),
-        title: t('brand_title'),
+        subtitle: '',
+        title: t('form_title'),
         titleCombined: t('form_title'),
       },
     },
