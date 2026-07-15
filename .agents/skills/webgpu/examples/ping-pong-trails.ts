@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 const adapter = await navigator.gpu?.requestAdapter();
-if (!adapter) throw new Error("WebGPU not supported");
+if (!adapter) {throw new Error("WebGPU not supported");}
 const device = await adapter.requestDevice();
 
 const width = 512;
@@ -69,5 +69,5 @@ function frame() {
 
 frame();
 
-export {};
+
 

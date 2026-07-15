@@ -2,8 +2,6 @@
 
 Advanced querying techniques, subqueries, CTEs, and raw SQL in Drizzle ORM.
 
-For Drizzle v1 beta/RC, prefer SQL-style `select().from(...)` examples unless the project explicitly configures RQBv2 relations with `defineRelations`. See `v1-beta-rc.md` before using `db.query.*`.
-
 ## Subqueries
 
 ### SELECT Subqueries
@@ -540,16 +538,7 @@ for (const author of authors) {
 }
 
 // ✅ Good: Single query with join
-const authorsWithPosts = await db
-  .select({
-    author: authors,
-    post: posts,
-  })
-  .from(authors)
-  .leftJoin(posts, eq(posts.authorId, authors.id));
-
-// ✅ Good: RQBv2 relation query only when `defineRelations` is configured
-const authorsWithPostsViaRelations = await db.query.authors.findMany({
+const authorsWithPosts = await db.query.authors.findMany({
   with: { posts: true },
 });
 

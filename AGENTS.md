@@ -1,4 +1,4 @@
-<!-- NEXT-AGENTS-MD-START -->
+<!-- BEGIN:nextjs-agent-rules -->
 
 # Next.js: ALWAYS read docs before coding
 
@@ -21,6 +21,11 @@ Before any Next.js work, find and read the relevant doc in `node_modules/next/di
 - Let compiler infer return types unless annotation adds clarity.
 - Options object for 3+ params, optional flags, or ambiguous args.
 - Hypothesis-driven debugging: 1-3 causes, validate most likely first.
+
+## Design system
+- Colors: navy `#0c2434` (primary), gold `#f5c518` (accent), cream `#f7f5ef` (on-dark text), ink `#14161b` (dark bg), muted `#64748b` (secondary text)
+- Typography: system-ui stack (no custom webfont)
+- Spacing: Tailwind default scale, `0.95rem` card radius, `0.5rem` control radius (`rounded-lg`)
 
 ## Token efficiency
 - Skip recaps unless the result is ambiguous or you need more input.

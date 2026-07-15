@@ -1,23 +1,22 @@
 ---
 name: drizzle-orm
-description: Type-safe SQL ORM and Drizzle Kit migrations for TypeScript. Use when working with drizzle-orm schemas, queries, database connections, migrations, drizzle-kit beta/RC upgrades, RQBv2 relations, Postgres/MySQL/SQLite/Cockroach/MSSQL dialects, Drizzle Studio, or migration troubleshooting.
+description: "Type-safe SQL ORM for TypeScript with zero runtime overhead"
+user-invocable: false
+disable-model-invocation: true
+progressive_disclosure:
+  entry_point:
+    summary: "Type-safe SQL ORM for TypeScript with zero runtime overhead"
+    when_to_use: "When working with drizzle-orm or related functionality."
+    quick_start: "1. Review the core concepts below. 2. Apply patterns to your use case. 3. Follow best practices for implementation."
+  references:
+    - advanced-schemas.md
+    - performance.md
+    - query-patterns.md
+    - vs-prisma.md
 ---
 # Drizzle ORM
 
 Modern TypeScript-first ORM with zero dependencies, compile-time type safety, and SQL-like syntax. Optimized for edge runtimes and serverless environments.
-
-## Version Guidance
-
-Check the installed versions before choosing patterns:
-
-```bash
-npm ls drizzle-orm drizzle-kit
-```
-
-- For `drizzle-orm`/`drizzle-kit` `1.0.0-beta.*` or `1.0.0-rc.*`, use the v1 beta/RC notes in [v1-beta-rc.md](./references/v1-beta-rc.md).
-- Prefer SQL-style query builder (`db.select().from(...)`) unless the project has explicit RQBv2 `defineRelations(...)` config.
-- Do not assume old `db.query.table.findMany(...)` works in v1 unless relations are configured with RQBv2.
-- For old migrations with `migrations/meta/_journal.json`, run `drizzle-kit up` before generating new migrations with v1 Kit.
 
 ## Quick Start
 
@@ -52,9 +51,10 @@ export const users = pgTable('users', {
 // db/client.ts
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import * as schema from './schema';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle({ client: pool });
+export const db = drizzle(pool, { schema });
 ```
 
 ### First Query
@@ -122,14 +122,11 @@ type NewUser = typeof users.$inferInsert;
 
 ## Relations
 
-Use the SQL-style query builder for normal joins. Use RQBv2 only when the project configures relations explicitly.
-
 ### One-to-Many
 
 ```typescript
 import { pgTable, serial, text, integer } from 'drizzle-orm/pg-core';
-import { defineRelations } from 'drizzle-orm';
-import * as schema from './schema';
+import { relations } from 'drizzle-orm';
 
 export const authors = pgTable('authors', {
   id: serial('id').primaryKey(),
@@ -142,19 +139,16 @@ export const posts = pgTable('posts', {
   authorId: integer('author_id').notNull().references(() => authors.id),
 });
 
-export const relations = defineRelations(schema, (r) => ({
-  authors: {
-    posts: r.many.posts(),
-  },
-  posts: {
-    author: r.one.authors({
-      from: r.posts.authorId,
-      to: r.authors.id,
-    }),
-  },
+export const authorsRelations = relations(authors, ({ many }) => ({
+  posts: many(posts),
 }));
 
-const db = drizzle(process.env.DATABASE_URL, { relations });
+export const postsRelations = relations(posts, ({ one }) => ({
+  author: one(authors, {
+    fields: [posts.authorId],
+    references: [authors.id],
+  }),
+}));
 
 // Query with relations
 const authorsWithPosts = await db.query.authors.findMany({
@@ -180,6 +174,19 @@ export const usersToGroups = pgTable('users_to_groups', {
   groupId: integer('group_id').notNull().references(() => groups.id),
 }, (table) => ({
   pk: primaryKey({ columns: [table.userId, table.groupId] }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  groups: many(usersToGroups),
+}));
+
+export const groupsRelations = relations(groups, ({ many }) => ({
+  users: many(usersToGroups),
+}));
+
+export const usersToGroupsRelations = relations(usersToGroups, ({ one }) => ({
+  user: one(users, { fields: [usersToGroups.userId], references: [users.id] }),
+  group: one(groups, { fields: [usersToGroups.groupId], references: [groups.id] }),
 }));
 ```
 
@@ -298,40 +305,32 @@ const tx = db.transaction(async (tx) => {
 
 ```typescript
 // drizzle.config.ts
-import { defineConfig } from 'drizzle-kit';
+import type { Config } from 'drizzle-kit';
 
-export default defineConfig({
+export default {
   schema: './db/schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? '',
+    url: process.env.DATABASE_URL!,
   },
-  verbose: true,
-  strict: true,
-});
+} satisfies Config;
 ```
 
 ### Migration Workflow
 
 ```bash
-# Upgrade old migration metadata to v1 folders format when needed
-npx drizzle-kit up
-
 # Generate migration
 npx drizzle-kit generate
 
-# View SQL in folders v3 format
-cat drizzle/<timestamp_or_name>/migration.sql
+# View SQL
+cat drizzle/0000_migration.sql
 
 # Apply migration
 npx drizzle-kit migrate
 
-# Pull existing database schema
-npx drizzle-kit pull
-
-# Pull an existing database and mark the initial pulled migration as applied
-npx drizzle-kit pull --init
+# Introspect existing database
+npx drizzle-kit introspect
 
 # Drizzle Studio (database GUI)
 npx drizzle-kit studio
@@ -340,7 +339,7 @@ npx drizzle-kit studio
 ### Example Migration
 
 ```sql
--- drizzle/20250212120000_initial/migration.sql
+-- drizzle/0000_initial.sql
 CREATE TABLE IF NOT EXISTS "users" (
   "id" serial PRIMARY KEY NOT NULL,
   "email" varchar(255) NOT NULL,
@@ -355,8 +354,6 @@ CREATE TABLE IF NOT EXISTS "users" (
 ### Detailed References
 
 - **[🏗️ Advanced Schemas](./references/advanced-schemas.md)** - Custom types, composite keys, indexes, constraints, multi-tenant patterns. Load when designing complex database schemas.
-
-- **[🧭 Drizzle v1 beta/RC](./references/v1-beta-rc.md)** - v1 beta/RC migration notes, folders v3 migrations, RQBv2, new dialects, `schemaFilter`, RLS syntax, and Kit rewrite. Load when upgrading Drizzle, using beta/RC versions, or seeing migration format changes.
 
 - **[🔍 Query Patterns](./references/query-patterns.md)** - Subqueries, CTEs, raw SQL, prepared statements, batch operations. Load when optimizing queries or handling complex filtering.
 
@@ -373,8 +370,6 @@ CREATE TABLE IF NOT EXISTS "users" (
 - Fetching all rows without pagination in production queries
 - Missing indexes on foreign keys or frequently queried columns
 - Using `select()` without specifying columns for large tables
-- Using `db.query.*` in Drizzle v1 without RQBv2 `defineRelations` configuration
-- Editing folders v3 migration snapshots manually instead of running `drizzle-kit up`, `generate`, `check`, or `migrate`
 
 ## Performance Benefits vs Prisma
 

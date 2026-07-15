@@ -5,7 +5,7 @@ const stride = 4 * 4;
 const bufferSize = particleCount * stride;
 
 const adapter = await navigator.gpu?.requestAdapter();
-if (!adapter) throw new Error("WebGPU not supported");
+if (!adapter) {throw new Error("WebGPU not supported");}
 const device = await adapter.requestDevice();
 
 const particleBuffer = device.createBuffer({
@@ -48,5 +48,5 @@ pass.dispatchWorkgroups(Math.ceil(particleCount / 64));
 pass.end();
 device.queue.submit([encoder.finish()]);
 
-export {};
+
 

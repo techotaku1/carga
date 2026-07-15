@@ -207,7 +207,7 @@ const usersWithPosts = await prisma.user.findMany({
 # Generate migration
 npx drizzle-kit generate
 
-# Output on Drizzle Kit v1 beta/RC: drizzle/<migration-folder>/migration.sql
+# Output: drizzle/0000_migration.sql
 # CREATE TABLE "users" (
 #   "id" serial PRIMARY KEY,
 #   "email" text NOT NULL UNIQUE
@@ -348,7 +348,7 @@ export default {
 
 ```bash
 # Generate Drizzle schema from existing database
-npx drizzle-kit pull
+npx drizzle-kit introspect
 ```
 
 ### Step 3: Convert Queries
@@ -369,7 +369,6 @@ const users = await prisma.user.findMany({
 // After (Drizzle)
 import { like, desc } from 'drizzle-orm';
 
-// RQBv2 relation query. Use only when defineRelations(...) is configured.
 const users = await db.query.users.findMany({
   where: like(users.email, '%example.com%'),
   with: { posts: true },
@@ -377,7 +376,7 @@ const users = await db.query.users.findMany({
   limit: 10,
 });
 
-// Or SQL-style, preferred when RQBv2 relations are not configured
+// Or SQL-style
 const users = await db
   .select()
   .from(users)

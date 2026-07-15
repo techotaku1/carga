@@ -21,7 +21,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Timeout connection attempts
 });
 
-export const db = drizzle({ client: pool });
+export const db = drizzle(pool);
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
@@ -374,7 +374,7 @@ async function bulkUpdate(updates: { id: number; name: string }[]) {
 // ❌ Bad: New connection per request
 export async function handler() {
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  const db = drizzle({ client: pool });
+  const db = drizzle(pool);
 
   const users = await db.select().from(users);
 
@@ -391,7 +391,7 @@ export async function handler() {
       connectionString: process.env.DATABASE_URL,
       max: 1, // Serverless: single connection per instance
     });
-    cachedDb = drizzle({ client: pool });
+    cachedDb = drizzle(pool);
   }
 
   const users = await cachedDb.select().from(users);
@@ -421,11 +421,11 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 
 // Primary (writes)
 const primaryPool = new Pool({ connectionString: process.env.PRIMARY_DB_URL });
-const primaryDb = drizzle({ client: primaryPool });
+const primaryDb = drizzle(primaryPool);
 
 // Replica (reads)
 const replicaPool = new Pool({ connectionString: process.env.REPLICA_DB_URL });
-const replicaDb = drizzle({ client: replicaPool });
+const replicaDb = drizzle(replicaPool);
 
 // Route queries appropriately
 async function getUsers() {
@@ -444,8 +444,7 @@ async function createUser(data: NewUser) {
 ```typescript
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-const db = drizzle({
-  client: pool,
+const db = drizzle(pool, {
   logger: {
     logQuery(query: string, params: unknown[]) {
       console.log('Query:', query);

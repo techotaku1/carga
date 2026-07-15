@@ -192,15 +192,7 @@ export const documents = pgTable('documents', {
   content: text('content'),
 });
 
-// On Drizzle v1 beta/RC, define RLS-enabled tables with pgTable.withRLS.
-export const secureDocuments = pgTable.withRLS('documents', {
-  id: serial('id').primaryKey(),
-  tenantId: uuid('tenant_id').notNull().references(() => tenants.id),
-  title: text('title').notNull(),
-  content: text('content'),
-});
-
-// Apply detailed policies with migration SQL when needed.
+// Apply RLS policy (via migration SQL)
 /*
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 
@@ -216,26 +208,23 @@ await db.execute(sql`SET app.current_tenant_id = ${tenantId}`);
 
 ```typescript
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { sql } from 'drizzle-orm';
 
 // Create schema-aware connection
 function getTenantDb(tenantId: string) {
   const schemaName = `tenant_${tenantId}`;
-  const db = drizzle({ client: pool });
 
-  return {
-    db,
-    setSearchPath: () => db.execute(sql.raw(`SET search_path TO "${schemaName}"`)),
-  };
+  return drizzle(pool, {
+    schema: {
+      ...schema,
+    },
+    schemaPrefix: schemaName,
+  });
 }
 
 // Use tenant-specific DB
 const tenantDb = getTenantDb('tenant123');
-await tenantDb.setSearchPath();
-await tenantDb.db.select().from(users);
+await tenantDb.select().from(users);
 ```
-
-Note: Validate tenant schema names before using raw SQL. Avoid passing unsanitized user input to `sql.raw(...)`.
 
 ## Database-Specific Features
 
@@ -343,9 +332,11 @@ export type UserWithPosts = User & {
 ```typescript
 // db/schema/users.ts
 export const users = pgTable('users', { ... });
+export const userRelations = relations(users, { ... });
 
 // db/schema/posts.ts
 export const posts = pgTable('posts', { ... });
+export const postRelations = relations(posts, { ... });
 
 // db/schema/index.ts
 export * from './users';
@@ -353,10 +344,8 @@ export * from './posts';
 
 // db/client.ts
 import * as schema from './schema';
-export const db = drizzle({ client: pool });
+export const db = drizzle(pool, { schema });
 ```
-
-For RQBv2 relation queries, define relations separately with `defineRelations(schema, ...)` and pass `{ relations }` to `drizzle(...)`. See `v1-beta-rc.md`.
 
 ### Naming Conventions
 
