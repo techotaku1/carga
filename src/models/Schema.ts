@@ -34,7 +34,6 @@ export const cargoReportsSchema = pgTable('cargo_reports', {
   driver: text('driver').notNull().default(''),
   note: text('note').notNull().default(''),
   fullValue: integer('full_value').notNull().default(0), // valor completo del flete (con ganancia)
-  profit: integer('profit').notNull().default(0), // legacy compatibility; drop after the expand deploy
   extraProfit: integer('extra_profit').notNull().default(0), // ganancia extra
   fuelCost: integer('fuel_cost').notNull().default(0),
   tollCost: integer('toll_cost').notNull().default(0),

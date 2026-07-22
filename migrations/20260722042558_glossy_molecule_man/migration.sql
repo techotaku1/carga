@@ -1,0 +1,2 @@
+-- Contract preparation: the application no longer reads "profit".
+-- The physical column remains until a later, separately verified migration.
