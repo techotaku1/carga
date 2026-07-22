@@ -93,39 +93,41 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <input
-            aria-label={t('other_cost_label_edit')}
-            className="min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-1 py-0.5 text-sm font-medium text-gray-700 hover:border-gray-300 focus:border-[#0c2434] focus:bg-white focus:outline-none"
-            onChange={(event) => {
-              setOtherLabel(event.target.value);
-              saveOtherCostLabel(event.target.value);
-            }}
-            placeholder={t('field_other_cost')}
-            type="text"
-            value={otherLabel}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="driverPayment" className={labelClass}>
+            {t('field_driver_payment')}
+          </label>
+          <CurrencyInput
+            id="driverPayment"
+            control={props.control}
+            name="driverPayment"
+            icon={<FiUserCheck aria-hidden="true" />}
           />
-          <span className="text-xs text-gray-400">{t('other_cost_label_hint')}</span>
         </div>
-        <CurrencyInput
-          id="otherCost"
-          control={props.control}
-          name="otherCost"
-          icon={<FiMoreHorizontal aria-hidden="true" />}
-        />
-      </div>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="driverPayment" className={labelClass}>
-          {t('field_driver_payment')}
-        </label>
-        <CurrencyInput
-          id="driverPayment"
-          control={props.control}
-          name="driverPayment"
-          icon={<FiUserCheck aria-hidden="true" />}
-        />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <input
+              aria-label={t('other_cost_label_edit')}
+              className="min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-1 py-0.5 text-sm font-medium text-gray-700 hover:border-gray-300 focus:border-[#0c2434] focus:bg-white focus:outline-none"
+              onChange={(event) => {
+                setOtherLabel(event.target.value);
+                saveOtherCostLabel(event.target.value);
+              }}
+              placeholder={t('field_other_cost')}
+              type="text"
+              value={otherLabel}
+            />
+            <span className="text-xs text-gray-400">{t('other_cost_label_hint')}</span>
+          </div>
+          <CurrencyInput
+            id="otherCost"
+            control={props.control}
+            name="otherCost"
+            icon={<FiMoreHorizontal aria-hidden="true" />}
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-between rounded-lg bg-[#0c2434] px-4 py-3 text-[#f7f5ef]">
