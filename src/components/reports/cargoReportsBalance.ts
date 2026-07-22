@@ -1,17 +1,8 @@
 import type { CargoReport } from './CargoReport';
-import { reportProfit } from './CargoReport';
-
-type PlateSubtotal = {
-  plate: string;
-  profit: number;
-  count: number;
-};
 
 export type CargoReportsBalance = {
   totalFullValue: number;
-  totalProfit: number;
   totalExtraProfit: number;
-  totalValueWithoutProfit: number;
   totalFuelCost: number;
   totalTollCost: number;
   totalOtherCost: number;
@@ -20,7 +11,6 @@ export type CargoReportsBalance = {
   totalIncome: number; // entradas: valor completo + tambay
   totalNet: number; // neto: entradas − salidas (costos)
   loadCount: number;
-  plateSubtotals: PlateSubtotal[];
 };
 
 export type PeriodBalance = {
@@ -43,14 +33,12 @@ export const filterReportsByMonth = (reports: CargoReport[], month?: string) => 
 };
 
 /**
- * Computes full value, costs, profit, load count, and per-plate profit subtotals.
+ * Computes income, costs, net result, and load count.
  * @param reports - The reports to summarize.
  * @returns The computed balance.
  */
 export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoReportsBalance => {
-  const subtotalsByPlate = new Map<string, PlateSubtotal>();
   let totalFullValue = 0;
-  let totalProfit = 0;
   let totalExtraProfit = 0;
   let totalFuelCost = 0;
   let totalTollCost = 0;
@@ -58,27 +46,12 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
   let totalDriverPayment = 0;
 
   for (const report of reports) {
-    const profit = reportProfit(report);
     totalFullValue += report.fullValue;
-    totalProfit += profit;
     totalExtraProfit += report.extraProfit;
     totalFuelCost += report.fuelCost;
     totalTollCost += report.tollCost;
     totalOtherCost += report.otherCost;
     totalDriverPayment += report.driverPayment;
-
-    const existing = subtotalsByPlate.get(report.plate);
-
-    if (existing) {
-      existing.profit += profit;
-      existing.count += 1;
-    } else {
-      subtotalsByPlate.set(report.plate, {
-        plate: report.plate,
-        profit,
-        count: 1,
-      });
-    }
   }
 
   const totalCosts = totalFuelCost + totalTollCost + totalOtherCost + totalDriverPayment;
@@ -86,9 +59,7 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
 
   return {
     totalFullValue,
-    totalProfit,
     totalExtraProfit,
-    totalValueWithoutProfit: totalFullValue - totalProfit,
     totalFuelCost,
     totalTollCost,
     totalOtherCost,
@@ -97,7 +68,6 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
     totalIncome,
     totalNet: totalIncome - totalCosts,
     loadCount: reports.length,
-    plateSubtotals: [...subtotalsByPlate.values()],
   };
 };
 

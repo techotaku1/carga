@@ -10,7 +10,6 @@ import {
   FiMap,
   FiMoreHorizontal,
   FiPlusCircle,
-  FiTrendingUp,
   FiUserCheck,
 } from 'react-icons/fi';
 import { CurrencyInput } from './CurrencyInput';
@@ -28,13 +27,11 @@ const labelClass = 'text-sm font-medium text-gray-700';
 export const ReportMoneyFields = (props: { control: Control<ReportFormValues> }) => {
   const t = useTranslations('ReportsBoard');
   const fullValue = useWatch({ control: props.control, name: 'fullValue' });
-  const profit = useWatch({ control: props.control, name: 'profit' });
   const extraProfit = useWatch({ control: props.control, name: 'extraProfit' });
   const fuelCost = useWatch({ control: props.control, name: 'fuelCost' });
   const tollCost = useWatch({ control: props.control, name: 'tollCost' });
   const otherCost = useWatch({ control: props.control, name: 'otherCost' });
   const driverPayment = useWatch({ control: props.control, name: 'driverPayment' });
-  const valueWithoutProfit = fullValue - profit;
   const net = fullValue + extraProfit - (fuelCost + tollCost + otherCost + driverPayment);
   const [otherLabel, setOtherLabel] = useState('');
 
@@ -58,28 +55,16 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="profit" className={labelClass}>
-            {t('field_profit')}
+          <label htmlFor="extraProfit" className={labelClass}>
+            {t('field_extra_profit')}
           </label>
           <CurrencyInput
-            id="profit"
+            id="extraProfit"
             control={props.control}
-            name="profit"
-            icon={<FiTrendingUp aria-hidden="true" />}
+            name="extraProfit"
+            icon={<FiPlusCircle aria-hidden="true" />}
           />
         </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <label htmlFor="extraProfit" className={labelClass}>
-          {t('field_extra_profit')}
-        </label>
-        <CurrencyInput
-          id="extraProfit"
-          control={props.control}
-          name="extraProfit"
-          icon={<FiPlusCircle aria-hidden="true" />}
-        />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -143,21 +128,13 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 rounded-lg bg-[#0c2434] px-4 py-3 text-[#f7f5ef] sm:grid-cols-2">
-        <div>
-          <p className="text-xs text-[#f7f5ef]/70">{t('field_value_without_profit')}</p>
-          <p className="text-lg font-bold tabular-nums">
-            {currencyFormatter.format(valueWithoutProfit)}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs text-[#f7f5ef]/70">{t('column_net')}</p>
-          <p
-            className={`text-lg font-bold tabular-nums ${net >= 0 ? 'text-[#f5c518]' : 'text-rose-400'}`}
-          >
-            {currencyFormatter.format(net)}
-          </p>
-        </div>
+      <div className="flex items-center justify-between rounded-lg bg-[#0c2434] px-4 py-3 text-[#f7f5ef]">
+        <p className="text-sm text-[#f7f5ef]/70">{t('column_net')}</p>
+        <p
+          className={`text-xl font-bold tabular-nums ${net >= 0 ? 'text-[#f5c518]' : 'text-rose-400'}`}
+        >
+          {currencyFormatter.format(net)}
+        </p>
       </div>
     </div>
   );

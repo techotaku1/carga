@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import type { CargoReport } from './CargoReport';
-import { reportNet, reportProfit, reportValueWithoutProfit } from './CargoReport';
+import { reportNet } from './CargoReport';
 import { loadOtherCostLabel } from './otherCostLabelStorage';
 import { ReportDrawer } from './ReportDrawer';
 
@@ -26,10 +26,13 @@ export const ReportsTable = (props: {
   reports: CargoReport[];
   onDelete: (id: string) => void;
   onEdit: (report: CargoReport) => void;
+  onPaidChange: (report: CargoReport, paid: boolean) => Promise<void>;
 }) => {
   const t = useTranslations('ReportsBoard');
   const [viewingNote, setViewingNote] = useState<CargoReport | null>(null);
   const [otherLabel, setOtherLabel] = useState('');
+  const [pendingPaidIds, setPendingPaidIds] = useState<Set<string>>(() => new Set());
+  const [paidUpdateError, setPaidUpdateError] = useState(false);
 
   useEffect(() => {
     setOtherLabel(loadOtherCostLabel());
@@ -41,11 +44,34 @@ export const ReportsTable = (props: {
 
   const otherCostHeader = otherLabel || t('field_other_cost');
 
+  const updatePaidStatus = async (report: CargoReport, paid: boolean) => {
+    setPaidUpdateError(false);
+    setPendingPaidIds((current) => new Set(current).add(report.id));
+
+    try {
+      await props.onPaidChange(report, paid);
+    } catch {
+      setPaidUpdateError(true);
+    } finally {
+      setPendingPaidIds((current) => {
+        const next = new Set(current);
+        next.delete(report.id);
+        return next;
+      });
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
+      {paidUpdateError && (
+        <p className="mb-3 text-sm text-red-700" role="alert">
+          {t('paid_update_error')}
+        </p>
+      )}
       <table className="w-full min-w-max border-collapse text-left">
         <thead>
           <tr className="border-b border-gray-300 text-sm text-gray-700">
+            <th className={`${firstCol} text-center`}>{t('column_paid')}</th>
             <th className={firstCol}>{t('column_date')}</th>
             <th className={col}>{t('column_plate')}</th>
             <th className={col}>{t('column_load_number')}</th>
@@ -54,8 +80,6 @@ export const ReportsTable = (props: {
             <th className={col}>{t('column_driver')}</th>
             <th className={col}>{t('column_note')}</th>
             <th className={`${col} text-right`}>{t('column_full_value')}</th>
-            <th className={`${col} text-right`}>{t('column_value_without_profit')}</th>
-            <th className={`${col} text-right`}>{t('column_profit')}</th>
             <th className={`${col} text-right`}>{t('field_extra_profit')}</th>
             <th className={`${col} text-right`}>{t('field_fuel_cost')}</th>
             <th className={`${col} text-right`}>{t('field_toll_cost')}</th>
@@ -67,11 +91,33 @@ export const ReportsTable = (props: {
         </thead>
         <tbody>
           {props.reports.map((report) => {
-            const profit = reportProfit(report);
             const net = reportNet(report);
+            const paidUpdatePending = pendingPaidIds.has(report.id);
 
             return (
-              <tr className="border-b border-gray-200 text-gray-900" key={report.id}>
+              <tr
+                aria-busy={paidUpdatePending}
+                className={`border-b border-gray-200 text-gray-900 transition-colors ${
+                  report.paid ? 'bg-emerald-100' : 'bg-white'
+                }`}
+                key={report.id}
+              >
+                <td className={`${firstCol} text-center`}>
+                  <input
+                    aria-label={
+                      report.paid
+                        ? t('paid_status_unmark', { loadNumber: report.loadNumber || report.id })
+                        : t('paid_status_mark', { loadNumber: report.loadNumber || report.id })
+                    }
+                    checked={report.paid}
+                    className="h-4 w-4 cursor-pointer accent-emerald-700 disabled:cursor-wait disabled:opacity-60"
+                    disabled={paidUpdatePending}
+                    onChange={(event) => {
+                      void updatePaidStatus(report, event.target.checked);
+                    }}
+                    type="checkbox"
+                  />
+                </td>
                 <td className={`${firstCol} text-gray-600`}>{report.date}</td>
                 <td className={`${col} font-bold text-[#0c2434]`}>{report.plate}</td>
                 <td className={col}>{report.loadNumber}</td>
@@ -96,12 +142,6 @@ export const ReportsTable = (props: {
                 </td>
                 <td className={`${numCol} text-gray-900`}>
                   {currencyFormatter.format(report.fullValue)}
-                </td>
-                <td className={`${numCol} text-gray-500`}>
-                  {currencyFormatter.format(reportValueWithoutProfit(report))}
-                </td>
-                <td className={`${numCol} ${earningClass(profit)}`}>
-                  {currencyFormatter.format(profit)}
                 </td>
                 <td className={`${numCol} ${earningClass(report.extraProfit)}`}>
                   {currencyFormatter.format(report.extraProfit)}

@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
 // This file defines the structure of your database tables using the Drizzle ORM.
 
@@ -34,11 +34,12 @@ export const cargoReportsSchema = pgTable('cargo_reports', {
   driver: text('driver').notNull().default(''),
   note: text('note').notNull().default(''),
   fullValue: integer('full_value').notNull().default(0), // valor completo del flete (con ganancia)
-  profit: integer('profit').notNull().default(0), // ganancia (manual)
+  profit: integer('profit').notNull().default(0), // legacy compatibility; drop after the expand deploy
   extraProfit: integer('extra_profit').notNull().default(0), // ganancia extra
   fuelCost: integer('fuel_cost').notNull().default(0),
   tollCost: integer('toll_cost').notNull().default(0),
   otherCost: integer('other_cost').notNull().default(0),
   driverPayment: integer('driver_payment').notNull().default(0), // pago al conductor
+  paid: boolean('paid').notNull().default(false),
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });

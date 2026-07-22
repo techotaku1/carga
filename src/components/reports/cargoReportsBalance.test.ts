@@ -21,12 +21,12 @@ const reports: CargoReport[] = [
     driver: 'Carlos',
     note: '',
     fullValue: 1_000_000,
-    profit: 300_000,
     extraProfit: 50_000,
     fuelCost: 100_000,
     tollCost: 50_000,
     otherCost: 0,
     driverPayment: 80_000,
+    paid: true,
   },
   {
     id: '2',
@@ -38,12 +38,12 @@ const reports: CargoReport[] = [
     driver: 'Maria',
     note: '',
     fullValue: 500_000,
-    profit: 200_000,
     extraProfit: 0,
     fuelCost: 50_000,
     tollCost: 0,
     otherCost: 0,
     driverPayment: 20_000,
+    paid: false,
   },
   {
     id: '3',
@@ -55,12 +55,12 @@ const reports: CargoReport[] = [
     driver: 'Carlos',
     note: '',
     fullValue: 750_000,
-    profit: 250_000,
     extraProfit: 100_000,
     fuelCost: 0,
     tollCost: 0,
     otherCost: 0,
     driverPayment: 0,
+    paid: false,
   },
 ];
 
@@ -80,14 +80,12 @@ describe('filterReportsByMonth', () => {
 });
 
 describe('calculateCargoReportsBalance', () => {
-  it('sums full value, manual profit, value without profit, and costs for the month', () => {
+  it('sums income, costs, and net value for the month', () => {
     const monthReports = filterReportsByMonth(reports, '2026-06');
     const balance = calculateCargoReportsBalance(monthReports);
 
     expect(balance.totalFullValue).toBe(1_500_000);
-    expect(balance.totalProfit).toBe(500_000);
     expect(balance.totalExtraProfit).toBe(50_000);
-    expect(balance.totalValueWithoutProfit).toBe(1_000_000);
     expect(balance.totalDriverPayment).toBe(100_000);
     expect(balance.totalCosts).toBe(300_000);
     expect(balance.totalIncome).toBe(1_550_000);
@@ -101,20 +99,10 @@ describe('calculateCargoReportsBalance', () => {
     expect(balance.loadCount).toBe(2);
   });
 
-  it('groups per-plate profit subtotals for the month', () => {
-    const monthReports = filterReportsByMonth(reports, '2026-06');
-    const balance = calculateCargoReportsBalance(monthReports);
-
-    expect(balance.plateSubtotals).toEqual([
-      { plate: 'NQL417', profit: 300_000, count: 1 },
-      { plate: 'ETL242', profit: 200_000, count: 1 },
-    ]);
-  });
-
-  it('computes the all-time profit across every month', () => {
+  it('computes the all-time net across every month', () => {
     const balance = calculateCargoReportsBalance(reports);
 
-    expect(balance.totalProfit).toBe(750_000);
+    expect(balance.totalNet).toBe(2_100_000);
     expect(balance.loadCount).toBe(3);
   });
 });
@@ -149,8 +137,8 @@ describe('dailyBalancesForMonth', () => {
     const result = dailyBalancesForMonth(reports, '2026-06');
 
     expect(result.map((entry) => entry.period)).toEqual(['2026-06-05', '2026-06-10']);
-    expect(result[0]?.balance.totalProfit).toBe(300_000);
-    expect(result[1]?.balance.totalProfit).toBe(200_000);
+    expect(result[0]?.balance.totalNet).toBe(820_000);
+    expect(result[1]?.balance.totalNet).toBe(430_000);
   });
 });
 
@@ -159,7 +147,7 @@ describe('monthlyBalancesForYear', () => {
     const result = monthlyBalancesForYear(reports, '2026');
 
     expect(result.map((entry) => entry.period)).toEqual(['2026-06', '2026-07']);
-    expect(result[0]?.balance.totalProfit).toBe(500_000);
-    expect(result[1]?.balance.totalProfit).toBe(250_000);
+    expect(result[0]?.balance.totalNet).toBe(1_250_000);
+    expect(result[1]?.balance.totalNet).toBe(850_000);
   });
 });

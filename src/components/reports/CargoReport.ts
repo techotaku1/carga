@@ -8,12 +8,12 @@ export type CargoReport = {
   driver: string;
   note: string;
   fullValue: number; // valor completo del flete (total, con ganancia incluida)
-  profit: number; // ganancia (manual, varía por carga)
   extraProfit: number; // ganancia extra (ingreso adicional)
   fuelCost: number; // gasolina
   tollCost: number; // peajes
   otherCost: number; // otros costos
   driverPayment: number; // pago al conductor
+  paid: boolean; // whether the report has been paid
 };
 
 /**
@@ -23,20 +23,6 @@ export type CargoReport = {
  */
 const reportCosts = (report: CargoReport) =>
   report.fuelCost + report.tollCost + report.otherCost + report.driverPayment;
-
-/**
- * Returns the manually entered profit for a report.
- * @param report - The report to read profit from.
- * @returns The profit amount.
- */
-export const reportProfit = (report: CargoReport) => report.profit;
-
-/**
- * Computes the full value minus the profit (the value without the margin).
- * @param report - The report to compute from.
- * @returns The value without profit.
- */
-export const reportValueWithoutProfit = (report: CargoReport) => report.fullValue - report.profit;
 
 /**
  * Total inflows for a report: full value plus extra income.

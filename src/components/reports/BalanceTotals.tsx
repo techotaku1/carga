@@ -52,25 +52,11 @@ export const BalanceTotals = (props: { balance: CargoReportsBalance }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
         <div className={tileClass}>
           <p className={labelClass}>{t('column_full_value')}</p>
           <p className={`${valueClass} text-gray-900`}>
             {currencyFormatter.format(props.balance.totalFullValue)}
-          </p>
-        </div>
-
-        <div className={tileClass}>
-          <p className={labelClass}>{t('column_value_without_profit')}</p>
-          <p className={`${valueClass} text-gray-500`}>
-            {currencyFormatter.format(props.balance.totalValueWithoutProfit)}
-          </p>
-        </div>
-
-        <div className={tileClass}>
-          <p className={labelClass}>{t('column_profit')}</p>
-          <p className={`${valueClass} text-emerald-700`}>
-            {currencyFormatter.format(props.balance.totalProfit)}
           </p>
         </div>
 

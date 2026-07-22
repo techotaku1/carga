@@ -55,12 +55,12 @@ export const ReportForm = (props: {
       driver: values.driver,
       note: values.note,
       fullValue: values.fullValue,
-      profit: values.profit,
       extraProfit: values.extraProfit,
       fuelCost: values.fuelCost,
       tollCost: values.tollCost,
       otherCost: values.otherCost,
       driverPayment: values.driverPayment,
+      paid: editingReport?.paid ?? false,
     });
 
     if (!editingReport) {

@@ -12,12 +12,12 @@ const report = (overrides: Partial<CargoReport>): CargoReport => ({
   driver: 'Pedro Ramírez',
   note: '',
   fullValue: 1000,
-  profit: 0,
   extraProfit: 0,
   fuelCost: 0,
   tollCost: 0,
   otherCost: 0,
   driverPayment: 0,
+  paid: false,
   ...overrides,
 });
 

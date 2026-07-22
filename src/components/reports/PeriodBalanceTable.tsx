@@ -35,8 +35,6 @@ export const PeriodBalanceTable = (props: {
             <th className={firstCol}>{props.periodHeader}</th>
             <th className={col}>{t('balance_count')}</th>
             <th className={col}>{t('column_full_value')}</th>
-            <th className={col}>{t('column_value_without_profit')}</th>
-            <th className={col}>{t('column_profit')}</th>
             <th className={col}>{t('field_extra_profit')}</th>
             <th className={col}>{t('field_fuel_cost')}</th>
             <th className={col}>{t('field_toll_cost')}</th>
@@ -54,12 +52,6 @@ export const PeriodBalanceTable = (props: {
               <td className={`${col} tabular-nums`}>{entry.balance.loadCount}</td>
               <td className={`${col} text-gray-900 tabular-nums`}>
                 {currencyFormatter.format(entry.balance.totalFullValue)}
-              </td>
-              <td className={`${col} text-gray-500 tabular-nums`}>
-                {currencyFormatter.format(entry.balance.totalValueWithoutProfit)}
-              </td>
-              <td className={`${col} tabular-nums ${earningClass(entry.balance.totalProfit)}`}>
-                {currencyFormatter.format(entry.balance.totalProfit)}
               </td>
               <td className={`${col} tabular-nums ${earningClass(entry.balance.totalExtraProfit)}`}>
                 {currencyFormatter.format(entry.balance.totalExtraProfit)}

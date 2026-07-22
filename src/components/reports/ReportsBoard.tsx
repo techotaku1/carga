@@ -10,6 +10,7 @@ import {
   createCargoReport,
   deleteCargoReport,
   listCargoReports,
+  setCargoReportPaid,
   updateCargoReport,
 } from './cargoReportsActions';
 import { calculateCargoReportsBalance } from './cargoReportsBalance';
@@ -134,6 +135,24 @@ export const ReportsBoard = () => {
     void removeReport();
   };
 
+  const handlePaidChange = async (report: CargoReport, paid: boolean) => {
+    setReports((previous) =>
+      previous.map((existing) => (existing.id === report.id ? { ...existing, paid } : existing)),
+    );
+
+    try {
+      await setCargoReportPaid(report.id, paid);
+    } catch (error) {
+      setReports((previous) =>
+        previous.map((existing) =>
+          existing.id === report.id ? { ...existing, paid: report.paid } : existing,
+        ),
+      );
+      logger.error(`Failed to update cargo report paid status: ${String(error)}`);
+      throw error;
+    }
+  };
+
   if (!hydrated) {
     return <DashboardSkeleton label={tDashboard('loading_label')} />;
   }
@@ -142,7 +161,7 @@ export const ReportsBoard = () => {
   const searchResults = searchActive ? searchReports(reports, filters) : [];
   const dayReports = reports.filter((report) => report.date === activeDay);
   const dayBalance = calculateCargoReportsBalance(dayReports);
-  const resultsProfit = calculateCargoReportsBalance(searchResults).totalProfit;
+  const resultsNet = calculateCargoReportsBalance(searchResults).totalNet;
 
   return (
     <div className="flex flex-col gap-6">
@@ -150,7 +169,7 @@ export const ReportsBoard = () => {
         <DayNavigator
           day={activeDay}
           loadCount={dayBalance.loadCount}
-          dayProfit={dayBalance.totalProfit}
+          dayNet={dayBalance.totalNet}
           hasPrevious={previousDay !== undefined}
           hasNext={nextDay !== undefined}
           onPrevious={() => {
@@ -199,12 +218,13 @@ export const ReportsBoard = () => {
       <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
         {searchActive && (
           <p className="mb-4 text-sm text-gray-600">
-            {`${t('search_results')}: ${searchResults.length} · ${currencyFormatter.format(resultsProfit)}`}
+            {`${t('search_results')}: ${searchResults.length} · ${currencyFormatter.format(resultsNet)}`}
           </p>
         )}
         <ReportsTable
           reports={searchActive ? searchResults : dayReports}
           onDelete={handleDelete}
+          onPaidChange={handlePaidChange}
           onEdit={(report) => {
             setEditingReport(report);
             setDrawerOpen(true);

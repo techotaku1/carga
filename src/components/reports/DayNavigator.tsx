@@ -11,7 +11,7 @@ const currencyFormatter = new Intl.NumberFormat('es-CO', {
 export const DayNavigator = (props: {
   day: string;
   loadCount: number;
-  dayProfit: number;
+  dayNet: number;
   hasPrevious: boolean;
   hasNext: boolean;
   onPrevious: () => void;
@@ -97,9 +97,9 @@ export const DayNavigator = (props: {
           <p className="text-xl font-bold">{props.loadCount}</p>
         </div>
         <div>
-          <p className="text-xs text-[#f7f5ef]/60">{t('day_profit')}</p>
+          <p className="text-xs text-[#f7f5ef]/60">{t('day_net')}</p>
           <p className="text-xl font-bold text-[#f5c518] tabular-nums">
-            {currencyFormatter.format(props.dayProfit)}
+            {currencyFormatter.format(props.dayNet)}
           </p>
         </div>
       </div>
