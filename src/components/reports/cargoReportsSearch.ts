@@ -42,7 +42,14 @@ export const searchReports = (reports: CargoReport[], filters: ReportSearchFilte
       return true;
     }
 
-    const haystack = [report.plate, report.loadNumber, report.company, report.driver, report.note]
+    const haystack = [
+      report.plate,
+      report.loadNumber,
+      report.company,
+      report.city,
+      report.driver,
+      report.note,
+    ]
       .join(' ')
       .toLowerCase();
 

@@ -55,7 +55,7 @@ export const ReportDrawer = (props: {
       ref={setDialogRef}
       closedby="any"
       aria-label={props.title}
-      className="drawer-slide-in fixed inset-y-0 right-0 left-auto m-0 h-full max-h-none w-full max-w-md overflow-y-auto border-0 bg-white p-0 shadow-2xl backdrop:bg-black/50"
+      className="drawer-slide-in fixed inset-y-0 right-0 left-auto m-0 h-full max-h-none w-full max-w-2xl overflow-y-auto border-0 bg-white p-0 shadow-2xl backdrop:bg-black/50"
       onClose={() => {
         props.onClose();
       }}

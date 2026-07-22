@@ -7,28 +7,32 @@ import { hasActiveFilters } from './cargoReportsSearch';
 export const ReportsSearch = (props: {
   filters: ReportSearchFilters;
   onFiltersChange: (filters: ReportSearchFilters) => void;
+  variant?: 'default' | 'range';
 }) => {
   const t = useTranslations('ReportsBoard');
   const inputClass = 'rounded-lg border border-gray-300 px-3 py-2 text-sm';
+  const showQuery = props.variant !== 'range';
 
   return (
     <div className="flex flex-wrap items-end gap-3">
-      <div className="flex min-w-55 flex-1 flex-col gap-1">
-        <label htmlFor="search-query" className="text-xs font-medium text-gray-500">
-          {t('search_label')}
-        </label>
-        <input
-          id="search-query"
-          type="search"
-          aria-label={t('search_label')}
-          placeholder={t('search_placeholder')}
-          className={inputClass}
-          value={props.filters.query}
-          onChange={(event) => {
-            props.onFiltersChange({ ...props.filters, query: event.target.value });
-          }}
-        />
-      </div>
+      {showQuery && (
+        <div className="flex min-w-55 flex-1 flex-col gap-1">
+          <label htmlFor="search-query" className="text-xs font-medium text-gray-500">
+            {t('search_label')}
+          </label>
+          <input
+            id="search-query"
+            type="search"
+            aria-label={t('search_label')}
+            placeholder={t('search_placeholder')}
+            className={inputClass}
+            value={props.filters.query}
+            onChange={(event) => {
+              props.onFiltersChange({ ...props.filters, query: event.target.value });
+            }}
+          />
+        </div>
+      )}
 
       <div className="flex flex-col gap-1">
         <label htmlFor="search-from" className="text-xs font-medium text-gray-500">

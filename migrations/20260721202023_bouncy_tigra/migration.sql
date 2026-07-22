@@ -1,0 +1,1 @@
+ALTER TABLE "cargo_reports" ADD COLUMN "extra_profit" integer DEFAULT 0 NOT NULL;

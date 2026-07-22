@@ -2,254 +2,197 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import {
+  FiBriefcase,
+  FiCalendar,
+  FiEdit3,
+  FiFileText,
+  FiHash,
+  FiMapPin,
+  FiTruck,
+} from 'react-icons/fi';
 import type { CargoReport } from './CargoReport';
-import { DriverModal } from './DriverModal';
-import { DEFAULT_DRIVER, DEFAULT_DRIVERS, loadDrivers, saveDrivers } from './driversStorage';
-import { todayIsoDate } from './reportDates';
+import { COLOMBIA_CITIES } from './colombiaCities';
+import { DriverSelect } from './DriverSelect';
+import type { ReportFormValues } from './reportFormModel';
+import {
+  defaultReportFormValues,
+  OTHER_PLATE_VALUE,
+  PLATE_OPTIONS,
+  reportFormSchema,
+  reportToFormValues,
+} from './reportFormModel';
+import { ReportMoneyFields } from './ReportMoneyFields';
 
-const PLATE_OPTIONS = ['NQL417', 'ETL242'] as const;
-const OTHER_PLATE_VALUE = 'other';
-const ADD_DRIVER_VALUE = 'add-driver';
+const fieldLabelClass = 'text-sm font-medium text-gray-700';
+const textInputClass =
+  'w-full rounded-lg border border-gray-300 py-2 pr-3 pl-9 focus:border-[#0c2434] focus:outline-none';
+const fieldIconClass = 'pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-gray-400';
 
-const reportFormSchema = z
-  .object({
-    plate: z.string().min(1),
-    otherPlate: z.string(),
-    date: z.string().min(1),
-    loadNumber: z.string().min(1),
-    company: z.string().min(1),
-    driver: z.string().min(1),
-    note: z.string(),
-    freightValue: z.number().positive(),
-  })
-  .refine((value) => value.plate !== OTHER_PLATE_VALUE || value.otherPlate.trim().length > 0, {
-    message: 'required',
-    path: ['otherPlate'],
-  });
-
-type ReportFormValues = z.infer<typeof reportFormSchema>;
-
-const defaultValues: ReportFormValues = {
-  plate: PLATE_OPTIONS[0],
-  otherPlate: '',
-  date: todayIsoDate(),
-  loadNumber: '',
-  company: '',
-  driver: DEFAULT_DRIVER,
-  note: '',
-  freightValue: 0,
-};
-
-export const ReportForm = (props: { onAdd: (report: CargoReport) => void }) => {
+export const ReportForm = (props: {
+  onSubmit: (report: CargoReport) => void;
+  editingReport?: CargoReport | null;
+}) => {
   const t = useTranslations('ReportsBoard');
-  const [drivers, setDrivers] = useState<string[]>(DEFAULT_DRIVERS);
-  const [driverModalOpen, setDriverModalOpen] = useState(false);
+  const editingReport = props.editingReport ?? null;
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(reportFormSchema),
-    defaultValues,
+    defaultValues: editingReport ? reportToFormValues(editingReport) : defaultReportFormValues,
   });
   const selectedPlate = form.watch('plate');
-  const selectedDriver = form.watch('driver');
-  const driverField = form.register('driver');
-
-  useEffect(() => {
-    const storedDrivers = loadDrivers();
-    setDrivers(storedDrivers);
-
-    if (!storedDrivers.includes(form.getValues('driver'))) {
-      form.setValue('driver', storedDrivers[0] ?? DEFAULT_DRIVER);
-    }
-  }, [form]);
-
-  const handleCreateDriver = (name: string) => {
-    const trimmed = name.trim();
-    const existingDriver = drivers.find((driver) => driver.toLowerCase() === trimmed.toLowerCase());
-    const driver = existingDriver ?? trimmed;
-    const nextDrivers = existingDriver ? drivers : [...drivers, driver];
-
-    setDrivers(nextDrivers);
-    saveDrivers(nextDrivers);
-    form.setValue('driver', driver, { shouldValidate: true });
-  };
 
   const onSubmit = form.handleSubmit((values) => {
     const plate = values.plate === OTHER_PLATE_VALUE ? values.otherPlate.trim() : values.plate;
 
-    props.onAdd({
-      id: crypto.randomUUID(),
+    props.onSubmit({
+      id: editingReport?.id ?? crypto.randomUUID(),
       plate,
       date: values.date,
       loadNumber: values.loadNumber,
       company: values.company,
+      city: values.city,
       driver: values.driver,
       note: values.note,
-      freightValue: values.freightValue,
+      fullValue: values.fullValue,
+      profit: values.profit,
+      extraProfit: values.extraProfit,
+      fuelCost: values.fuelCost,
+      tollCost: values.tollCost,
+      otherCost: values.otherCost,
     });
-    form.reset({ ...defaultValues, driver: values.driver });
+
+    if (!editingReport) {
+      form.reset({ ...defaultReportFormValues, driver: values.driver });
+    }
   });
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1">
-          <label htmlFor="plate" className="text-sm font-medium text-gray-700">
+          <label htmlFor="plate" className={fieldLabelClass}>
             {t('field_plate')}
           </label>
-          <select
-            id="plate"
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('plate')}
-          >
-            {PLATE_OPTIONS.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-            <option value={OTHER_PLATE_VALUE}>{t('field_plate_other')}</option>
-          </select>
+          <div className="relative">
+            <FiTruck className={fieldIconClass} aria-hidden="true" />
+            <select id="plate" className={textInputClass} {...form.register('plate')}>
+              {PLATE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+              <option value={OTHER_PLATE_VALUE}>{t('field_plate_other')}</option>
+            </select>
+          </div>
         </div>
 
         {selectedPlate === OTHER_PLATE_VALUE && (
           <div className="flex flex-col gap-1">
-            <label htmlFor="otherPlate" className="text-sm font-medium text-gray-700">
+            <label htmlFor="otherPlate" className={fieldLabelClass}>
               {t('field_plate_other_label')}
             </label>
-            <input
-              id="otherPlate"
-              type="text"
-              className="rounded-lg border border-gray-300 px-3 py-2"
-              {...form.register('otherPlate')}
-            />
-            {form.formState.errors.otherPlate && (
-              <span className="text-sm text-red-600">{t('error_required')}</span>
-            )}
+            <div className="relative">
+              <FiEdit3 className={fieldIconClass} aria-hidden="true" />
+              <input
+                id="otherPlate"
+                type="text"
+                className={textInputClass}
+                {...form.register('otherPlate')}
+              />
+            </div>
           </div>
         )}
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="date" className="text-sm font-medium text-gray-700">
+          <label htmlFor="date" className={fieldLabelClass}>
             {t('field_date')}
           </label>
-          <input
-            id="date"
-            type="date"
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('date')}
-          />
-          {form.formState.errors.date && (
-            <span className="text-sm text-red-600">{t('error_required')}</span>
-          )}
+          <div className="relative">
+            <FiCalendar className={fieldIconClass} aria-hidden="true" />
+            <input id="date" type="date" className={textInputClass} {...form.register('date')} />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="loadNumber" className="text-sm font-medium text-gray-700">
+          <label htmlFor="loadNumber" className={fieldLabelClass}>
             {t('field_load_number')}
           </label>
-          <input
-            id="loadNumber"
-            type="text"
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('loadNumber')}
-          />
-          {form.formState.errors.loadNumber && (
-            <span className="text-sm text-red-600">{t('error_required')}</span>
-          )}
+          <div className="relative">
+            <FiHash className={fieldIconClass} aria-hidden="true" />
+            <input
+              id="loadNumber"
+              type="text"
+              className={textInputClass}
+              {...form.register('loadNumber')}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="company" className="text-sm font-medium text-gray-700">
+          <label htmlFor="company" className={fieldLabelClass}>
             {t('field_company')}
           </label>
-          <input
-            id="company"
-            type="text"
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('company')}
-          />
-          {form.formState.errors.company && (
-            <span className="text-sm text-red-600">{t('error_required')}</span>
-          )}
+          <div className="relative">
+            <FiBriefcase className={fieldIconClass} aria-hidden="true" />
+            <input
+              id="company"
+              type="text"
+              className={textInputClass}
+              {...form.register('company')}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="driver" className="text-sm font-medium text-gray-700">
-            {t('field_driver')}
+          <label htmlFor="city" className={fieldLabelClass}>
+            {t('field_city')}
           </label>
-          <select
-            id="driver"
-            ref={driverField.ref}
-            name={driverField.name}
-            value={selectedDriver}
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            onBlur={driverField.onBlur}
-            onChange={(event) => {
-              if (event.target.value === ADD_DRIVER_VALUE) {
-                setDriverModalOpen(true);
-                return;
-              }
-
-              form.setValue('driver', event.target.value, { shouldValidate: true });
-            }}
-          >
-            {drivers.map((driver) => (
-              <option key={driver} value={driver}>
-                {driver}
-              </option>
-            ))}
-            <option value={ADD_DRIVER_VALUE}>{t('driver_add')}</option>
-          </select>
-          {form.formState.errors.driver && (
-            <span className="text-sm text-red-600">{t('error_required')}</span>
-          )}
+          <div className="relative">
+            <FiMapPin className={fieldIconClass} aria-hidden="true" />
+            <input
+              id="city"
+              type="text"
+              list="colombia-cities"
+              autoComplete="off"
+              placeholder={t('field_city_placeholder')}
+              className={textInputClass}
+              {...form.register('city')}
+            />
+            <datalist id="colombia-cities">
+              {COLOMBIA_CITIES.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </datalist>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-1">
-          <label htmlFor="freightValue" className="text-sm font-medium text-gray-700">
-            {t('field_freight_value')}
-          </label>
-          <input
-            id="freightValue"
-            type="number"
-            min="0"
-            step="1"
-            className="rounded-lg border border-gray-300 px-3 py-2"
-            {...form.register('freightValue', { valueAsNumber: true })}
-          />
-          {form.formState.errors.freightValue && (
-            <span className="text-sm text-red-600">{t('error_freight_value_positive')}</span>
-          )}
-        </div>
+        <DriverSelect form={form} />
       </div>
 
+      <ReportMoneyFields control={form.control} />
+
       <div className="flex flex-col gap-1">
-        <label htmlFor="note" className="text-sm font-medium text-gray-700">
+        <label htmlFor="note" className={fieldLabelClass}>
           {t('field_note')}
         </label>
-        <textarea
-          id="note"
-          rows={2}
-          className="rounded-lg border border-gray-300 px-3 py-2"
-          {...form.register('note')}
-        />
+        <div className="relative">
+          <FiFileText
+            className="pointer-events-none absolute top-3 left-3 text-gray-400"
+            aria-hidden="true"
+          />
+          <textarea id="note" rows={2} className={textInputClass} {...form.register('note')} />
+        </div>
       </div>
 
       <button
         type="submit"
-        className="self-start rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white hover:bg-blue-800"
+        className="self-start rounded-lg bg-[#0c2434] px-4 py-2 font-semibold text-[#f7f5ef] transition-colors hover:bg-[#14161b]"
       >
-        {t('add_report')}
+        {editingReport ? t('save_report') : t('add_report')}
       </button>
-
-      <DriverModal
-        open={driverModalOpen}
-        onCreate={handleCreateDriver}
-        onClose={() => {
-          setDriverModalOpen(false);
-        }}
-      />
     </form>
   );
 };

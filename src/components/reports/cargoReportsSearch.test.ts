@@ -8,9 +8,15 @@ const report = (overrides: Partial<CargoReport>): CargoReport => ({
   date: '2026-07-06',
   loadNumber: 'C-100',
   company: 'Molinos Santa Rosa',
+  city: 'Bogotá',
   driver: 'Pedro Ramírez',
   note: '',
-  freightValue: 1000,
+  fullValue: 1000,
+  profit: 0,
+  extraProfit: 0,
+  fuelCost: 0,
+  tollCost: 0,
+  otherCost: 0,
   ...overrides,
 });
 
