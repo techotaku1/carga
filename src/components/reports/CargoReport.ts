@@ -13,14 +13,16 @@ export type CargoReport = {
   fuelCost: number; // gasolina
   tollCost: number; // peajes
   otherCost: number; // otros costos
+  driverPayment: number; // pago al conductor
 };
 
 /**
- * Sums the cost components (fuel, tolls, other) for a report.
+ * Sums the cost components (fuel, tolls, other, driver payment) for a report.
  * @param report - The report to total costs for.
  * @returns The combined cost amount.
  */
-const reportCosts = (report: CargoReport) => report.fuelCost + report.tollCost + report.otherCost;
+const reportCosts = (report: CargoReport) =>
+  report.fuelCost + report.tollCost + report.otherCost + report.driverPayment;
 
 /**
  * Returns the manually entered profit for a report.

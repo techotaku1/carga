@@ -1,0 +1,1 @@
+ALTER TABLE "cargo_reports" ADD COLUMN "driver_payment" integer DEFAULT 0 NOT NULL;

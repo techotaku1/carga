@@ -21,6 +21,7 @@ export const reportFormSchema = z.object({
   fuelCost: z.number(),
   tollCost: z.number(),
   otherCost: z.number(),
+  driverPayment: z.number(),
 });
 
 export type ReportFormValues = z.infer<typeof reportFormSchema>;
@@ -40,6 +41,7 @@ export const defaultReportFormValues: ReportFormValues = {
   fuelCost: 0,
   tollCost: 0,
   otherCost: 0,
+  driverPayment: 0,
 };
 
 /**
@@ -65,5 +67,6 @@ export const reportToFormValues = (report: CargoReport): ReportFormValues => {
     fuelCost: report.fuelCost,
     tollCost: report.tollCost,
     otherCost: report.otherCost,
+    driverPayment: report.driverPayment,
   };
 };

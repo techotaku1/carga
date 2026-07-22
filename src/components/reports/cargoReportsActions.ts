@@ -45,6 +45,7 @@ export const listCargoReports = async (): Promise<CargoReport[]> => {
       fuelCost: row.fuelCost,
       tollCost: row.tollCost,
       otherCost: row.otherCost,
+      driverPayment: row.driverPayment,
     }),
   );
 };
@@ -82,6 +83,7 @@ export const updateCargoReport = async (report: CargoReport): Promise<void> => {
       fuelCost: report.fuelCost,
       tollCost: report.tollCost,
       otherCost: report.otherCost,
+      driverPayment: report.driverPayment,
     })
     .where(and(eq(cargoReportsSchema.id, report.id), eq(cargoReportsSchema.userId, userId)));
 };

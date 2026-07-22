@@ -41,6 +41,7 @@ export const PeriodBalanceTable = (props: {
             <th className={col}>{t('field_fuel_cost')}</th>
             <th className={col}>{t('field_toll_cost')}</th>
             <th className={col}>{t('field_other_cost')}</th>
+            <th className={col}>{t('field_driver_payment')}</th>
             <th className={`${col} border-l-2 border-gray-300`}>{t('column_net')}</th>
           </tr>
         </thead>
@@ -71,6 +72,9 @@ export const PeriodBalanceTable = (props: {
               </td>
               <td className={`${col} text-amber-700 tabular-nums`}>
                 {currencyFormatter.format(entry.balance.totalOtherCost)}
+              </td>
+              <td className={`${col} text-amber-700 tabular-nums`}>
+                {currencyFormatter.format(entry.balance.totalDriverPayment)}
               </td>
               <td
                 className={`${col} border-l-2 border-gray-300 tabular-nums ${earningClass(entry.balance.totalNet)}`}

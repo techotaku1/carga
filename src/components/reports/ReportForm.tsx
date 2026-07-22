@@ -60,6 +60,7 @@ export const ReportForm = (props: {
       fuelCost: values.fuelCost,
       tollCost: values.tollCost,
       otherCost: values.otherCost,
+      driverPayment: values.driverPayment,
     });
 
     if (!editingReport) {

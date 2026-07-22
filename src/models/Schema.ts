@@ -39,5 +39,6 @@ export const cargoReportsSchema = pgTable('cargo_reports', {
   fuelCost: integer('fuel_cost').notNull().default(0),
   tollCost: integer('toll_cost').notNull().default(0),
   otherCost: integer('other_cost').notNull().default(0),
+  driverPayment: integer('driver_payment').notNull().default(0), // pago al conductor
   createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
 });

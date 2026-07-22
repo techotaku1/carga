@@ -30,6 +30,7 @@
     "field_fuel_cost": "Gasolina",
     "field_toll_cost": "Peajes",
     "field_other_cost": "Otros costos",
+    "field_driver_payment": "Pago conductor",
     "field_profit": "Ganancia",
     "field_extra_profit": "Tambay",
     "field_value_without_profit": "Valor sin ganancia",

@@ -52,7 +52,7 @@ export const BalanceTotals = (props: { balance: CargoReportsBalance }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         <div className={tileClass}>
           <p className={labelClass}>{t('column_full_value')}</p>
           <p className={`${valueClass} text-gray-900`}>
@@ -102,6 +102,13 @@ export const BalanceTotals = (props: { balance: CargoReportsBalance }) => {
           <p className={labelClass}>{otherCostLabel}</p>
           <p className={`${valueClass} text-amber-700`}>
             {currencyFormatter.format(props.balance.totalOtherCost)}
+          </p>
+        </div>
+
+        <div className={tileClass}>
+          <p className={labelClass}>{t('field_driver_payment')}</p>
+          <p className={`${valueClass} text-amber-700`}>
+            {currencyFormatter.format(props.balance.totalDriverPayment)}
           </p>
         </div>
 

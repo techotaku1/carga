@@ -17,6 +17,7 @@ const report = (overrides: Partial<CargoReport>): CargoReport => ({
   fuelCost: 0,
   tollCost: 0,
   otherCost: 0,
+  driverPayment: 0,
   ...overrides,
 });
 

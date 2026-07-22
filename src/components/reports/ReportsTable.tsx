@@ -60,6 +60,7 @@ export const ReportsTable = (props: {
             <th className={`${col} text-right`}>{t('field_fuel_cost')}</th>
             <th className={`${col} text-right`}>{t('field_toll_cost')}</th>
             <th className={`${col} text-right`}>{otherCostHeader}</th>
+            <th className={`${col} text-right`}>{t('field_driver_payment')}</th>
             <th className={`${col} border-l-2 border-gray-300 text-right`}>{t('column_net')}</th>
             <th aria-label={t('column_actions')} className={col} />
           </tr>
@@ -108,6 +109,7 @@ export const ReportsTable = (props: {
                 <td className={costCol}>{currencyFormatter.format(report.fuelCost)}</td>
                 <td className={costCol}>{currencyFormatter.format(report.tollCost)}</td>
                 <td className={costCol}>{currencyFormatter.format(report.otherCost)}</td>
+                <td className={costCol}>{currencyFormatter.format(report.driverPayment)}</td>
                 <td className={`${numCol} border-l-2 border-gray-300 ${earningClass(net)}`}>
                   {currencyFormatter.format(net)}
                 </td>

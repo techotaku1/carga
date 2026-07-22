@@ -30,6 +30,7 @@
     "field_fuel_cost": "Fuel",
     "field_toll_cost": "Tolls",
     "field_other_cost": "Other costs",
+    "field_driver_payment": "Driver payment",
     "field_profit": "Profit",
     "field_extra_profit": "Tambay",
     "field_value_without_profit": "Value without profit",

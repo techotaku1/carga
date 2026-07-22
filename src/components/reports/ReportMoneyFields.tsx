@@ -11,6 +11,7 @@ import {
   FiMoreHorizontal,
   FiPlusCircle,
   FiTrendingUp,
+  FiUserCheck,
 } from 'react-icons/fi';
 import { CurrencyInput } from './CurrencyInput';
 import { loadOtherCostLabel, saveOtherCostLabel } from './otherCostLabelStorage';
@@ -32,8 +33,9 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
   const fuelCost = useWatch({ control: props.control, name: 'fuelCost' });
   const tollCost = useWatch({ control: props.control, name: 'tollCost' });
   const otherCost = useWatch({ control: props.control, name: 'otherCost' });
+  const driverPayment = useWatch({ control: props.control, name: 'driverPayment' });
   const valueWithoutProfit = fullValue - profit;
-  const net = fullValue + extraProfit - (fuelCost + tollCost + otherCost);
+  const net = fullValue + extraProfit - (fuelCost + tollCost + otherCost + driverPayment);
   const [otherLabel, setOtherLabel] = useState('');
 
   useEffect(() => {
@@ -126,6 +128,18 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
           control={props.control}
           name="otherCost"
           icon={<FiMoreHorizontal aria-hidden="true" />}
+        />
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label htmlFor="driverPayment" className={labelClass}>
+          {t('field_driver_payment')}
+        </label>
+        <CurrencyInput
+          id="driverPayment"
+          control={props.control}
+          name="driverPayment"
+          icon={<FiUserCheck aria-hidden="true" />}
         />
       </div>
 

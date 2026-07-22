@@ -15,6 +15,7 @@ export type CargoReportsBalance = {
   totalFuelCost: number;
   totalTollCost: number;
   totalOtherCost: number;
+  totalDriverPayment: number;
   totalCosts: number;
   totalIncome: number; // entradas: valor completo + tambay
   totalNet: number; // neto: entradas − salidas (costos)
@@ -54,6 +55,7 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
   let totalFuelCost = 0;
   let totalTollCost = 0;
   let totalOtherCost = 0;
+  let totalDriverPayment = 0;
 
   for (const report of reports) {
     const profit = reportProfit(report);
@@ -63,6 +65,7 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
     totalFuelCost += report.fuelCost;
     totalTollCost += report.tollCost;
     totalOtherCost += report.otherCost;
+    totalDriverPayment += report.driverPayment;
 
     const existing = subtotalsByPlate.get(report.plate);
 
@@ -78,7 +81,7 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
     }
   }
 
-  const totalCosts = totalFuelCost + totalTollCost + totalOtherCost;
+  const totalCosts = totalFuelCost + totalTollCost + totalOtherCost + totalDriverPayment;
   const totalIncome = totalFullValue + totalExtraProfit;
 
   return {
@@ -89,6 +92,7 @@ export const calculateCargoReportsBalance = (reports: CargoReport[]): CargoRepor
     totalFuelCost,
     totalTollCost,
     totalOtherCost,
+    totalDriverPayment,
     totalCosts,
     totalIncome,
     totalNet: totalIncome - totalCosts,

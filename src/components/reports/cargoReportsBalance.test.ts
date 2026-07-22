@@ -26,6 +26,7 @@ const reports: CargoReport[] = [
     fuelCost: 100_000,
     tollCost: 50_000,
     otherCost: 0,
+    driverPayment: 80_000,
   },
   {
     id: '2',
@@ -42,6 +43,7 @@ const reports: CargoReport[] = [
     fuelCost: 50_000,
     tollCost: 0,
     otherCost: 0,
+    driverPayment: 20_000,
   },
   {
     id: '3',
@@ -58,6 +60,7 @@ const reports: CargoReport[] = [
     fuelCost: 0,
     tollCost: 0,
     otherCost: 0,
+    driverPayment: 0,
   },
 ];
 
@@ -85,9 +88,10 @@ describe('calculateCargoReportsBalance', () => {
     expect(balance.totalProfit).toBe(500_000);
     expect(balance.totalExtraProfit).toBe(50_000);
     expect(balance.totalValueWithoutProfit).toBe(1_000_000);
-    expect(balance.totalCosts).toBe(200_000);
+    expect(balance.totalDriverPayment).toBe(100_000);
+    expect(balance.totalCosts).toBe(300_000);
     expect(balance.totalIncome).toBe(1_550_000);
-    expect(balance.totalNet).toBe(1_350_000);
+    expect(balance.totalNet).toBe(1_250_000);
   });
 
   it('counts the loads for the month', () => {
