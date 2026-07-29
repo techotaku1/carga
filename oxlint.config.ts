@@ -1,10 +1,12 @@
 import { defineConfig } from 'oxlint';
 import core from 'ultracite/oxlint/core';
+// github, sonarjs and react-doctor moved to this opt-in preset in ultracite 7.9.
+import jsPlugins from 'ultracite/oxlint/js-plugins';
 import next from 'ultracite/oxlint/next';
 import react from 'ultracite/oxlint/react';
 
 export default defineConfig({
-  extends: [core, react, next],
+  extends: [core, react, next, jsPlugins],
   ignorePatterns: ['.agents/**', '.claude/**'],
   rules: {
     'no-warning-comments': 'off', // Allow TODO and FIXME comments
