@@ -221,7 +221,7 @@ export const ReportsBoard = () => {
         </div>
       </section>
 
-      <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
+      <section className="rounded-xl border border-gray-200 bg-white p-3 shadow-sm">
         {searchActive && (
           <p className="mb-4 text-sm text-gray-600">
             {`${t('search_results')}: ${searchResults.length} · ${currencyFormatter.format(resultsNet)}`}

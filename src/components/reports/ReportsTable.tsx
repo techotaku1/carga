@@ -205,6 +205,15 @@ const Header = (props: { children: string; icon: React.ReactNode }) => (
   </span>
 );
 
+// Keeps long free-text values from stretching the table. The text stays in the
+// DOM for screen readers; it is only clipped visually.
+const TruncatedCell = (props: { value: string; width: string }) =>
+  props.value ? (
+    <span className={`mx-auto block truncate ${props.width}`}>{props.value}</span>
+  ) : (
+    <span className="text-gray-400">—</span>
+  );
+
 const columns: ColumnDef<CargoReport>[] = [
   {
     id: 'paid',
@@ -268,6 +277,7 @@ const columns: ColumnDef<CargoReport>[] = [
         {reportsTableMeta(context.table.options.meta)?.text.columnCompany ?? ''}
       </Header>
     ),
+    cell: (context) => <TruncatedCell value={context.getValue<string>()} width="w-[10ch]" />,
   },
   {
     accessorKey: 'city',
@@ -276,6 +286,7 @@ const columns: ColumnDef<CargoReport>[] = [
         {reportsTableMeta(context.table.options.meta)?.text.columnCity ?? ''}
       </Header>
     ),
+    cell: (context) => <TruncatedCell value={context.getValue<string>()} width="w-[9ch]" />,
   },
   {
     accessorKey: 'driver',
@@ -284,6 +295,7 @@ const columns: ColumnDef<CargoReport>[] = [
         {reportsTableMeta(context.table.options.meta)?.text.columnDriver ?? ''}
       </Header>
     ),
+    cell: (context) => <TruncatedCell value={context.getValue<string>()} width="w-[11ch]" />,
   },
   {
     accessorKey: 'note',
