@@ -97,19 +97,21 @@ export const BalanceBoard = () => {
   const formatDayLong = (period: string) => dayLongFormatter.format(new Date(`${period}T00:00:00`));
 
   const isDaily = mode === 'daily';
-  // Top totals show the all-time balance, or the filtered set when searching.
-  const totalsBalance = calculateCargoReportsBalance(searchActive ? filteredReports : reports);
 
-  // Both modes list every report on its own row; only the period they cover changes.
-  const getEntries = () => {
+  // A search overrides the period; otherwise each mode covers its own active period.
+  const periodReports = () => {
     if (searchActive) {
-      return reportBalances(filteredReports);
+      return filteredReports;
     }
 
     return isDaily
-      ? reportBalances(reports.filter((report) => report.date === activeDay))
-      : reportBalances(reports, activeMonth);
+      ? reports.filter((report) => report.date === activeDay)
+      : reports.filter((report) => report.date.startsWith(activeMonth));
   };
+
+  // Totals and rows always describe the exact same set of reports.
+  const visibleReports = periodReports();
+  const totalsBalance = calculateCargoReportsBalance(visibleReports);
 
   const previousDay = shiftInList(days, activeDay, -1);
   const nextDay = shiftInList(days, activeDay, 1);
@@ -197,7 +199,7 @@ export const BalanceBoard = () => {
 
       <PeriodBalanceTable
         emptyLabel={t('empty_balance')}
-        entries={getEntries()}
+        entries={reportBalances(visibleReports)}
         formatPeriod={formatDay}
         periodHeader={t('column_day')}
       />
