@@ -7,11 +7,14 @@ import { hasActiveFilters } from './cargoReportsSearch';
 export const ReportsSearch = (props: {
   filters: ReportSearchFilters;
   onFiltersChange: (filters: ReportSearchFilters) => void;
+  rangeUnit?: 'day' | 'month';
   variant?: 'default' | 'range';
 }) => {
   const t = useTranslations('ReportsBoard');
   const inputClass = 'rounded-lg border border-gray-300 px-3 py-2 text-sm';
   const showQuery = props.variant !== 'range';
+  const rangeUnit = props.rangeUnit ?? 'day';
+  const rangeValue = (value: string) => (rangeUnit === 'month' ? value.slice(0, 7) : value);
 
   return (
     <div className="flex flex-wrap items-end gap-3">
@@ -40,10 +43,10 @@ export const ReportsSearch = (props: {
         </label>
         <input
           id="search-from"
-          type="date"
+          type={rangeUnit === 'month' ? 'month' : 'date'}
           aria-label={t('search_from')}
           className={inputClass}
-          value={props.filters.from}
+          value={rangeValue(props.filters.from)}
           onChange={(event) => {
             props.onFiltersChange({ ...props.filters, from: event.target.value });
           }}
@@ -56,10 +59,10 @@ export const ReportsSearch = (props: {
         </label>
         <input
           id="search-to"
-          type="date"
+          type={rangeUnit === 'month' ? 'month' : 'date'}
           aria-label={t('search_to')}
           className={inputClass}
-          value={props.filters.to}
+          value={rangeValue(props.filters.to)}
           onChange={(event) => {
             props.onFiltersChange({ ...props.filters, to: event.target.value });
           }}

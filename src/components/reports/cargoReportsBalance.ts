@@ -14,7 +14,9 @@ export type CargoReportsBalance = {
 };
 
 export type PeriodBalance = {
+  id?: string; // unique row id when the entry is a single report
   period: string; // yyyy-mm-dd for a day, yyyy-mm for a month
+  detail?: string; // plate, load number, company or driver of a single report
   balance: CargoReportsBalance;
 };
 
@@ -143,18 +145,6 @@ const groupBalances = (
 };
 
 /**
- * Computes a per-day balance for every day with data inside the given month.
- * @param reports - The reports to summarize.
- * @param month - The month to break down, in yyyy-mm format.
- * @returns The per-day balances, oldest day first.
- */
-export const dailyBalancesForMonth = (reports: CargoReport[], month: string): PeriodBalance[] =>
-  groupBalances(
-    reports.filter((report) => report.date.slice(0, 7) === month),
-    (report) => report.date,
-  );
-
-/**
  * Computes a per-month balance for every month with data inside the given year.
  * @param reports - The reports to summarize.
  * @param year - The year to break down, in yyyy format.
@@ -166,16 +156,25 @@ export const monthlyBalancesForYear = (reports: CargoReport[], year: string): Pe
     (report) => report.date.slice(0, 7),
   );
 
+const reportDetail = (report: CargoReport) =>
+  [report.plate, report.loadNumber, report.company, report.driver].filter(Boolean).join(' · ');
+
 /**
- * Groups any set of reports into per-day balances, oldest day first.
- * @param reports - The reports to summarize.
- * @returns The per-day balances.
+ * Lists one balance row per report, without grouping, oldest first.
+ * @param reports - The reports to break down.
+ * @param month - Optional month filter, in yyyy-mm format.
+ * @returns One entry per report, each carrying its own id and detail.
  */
-export const dailyBalances = (reports: CargoReport[]): PeriodBalance[] =>
-  groupBalances(
-    reports.filter((report) => Boolean(report.date)),
-    (report) => report.date,
-  );
+export const reportBalances = (reports: CargoReport[], month?: string): PeriodBalance[] =>
+  reports
+    .filter((report) => Boolean(report.date) && (!month || report.date.slice(0, 7) === month))
+    .toSorted((left, right) => left.date.localeCompare(right.date))
+    .map((report) => ({
+      id: report.id,
+      period: report.date,
+      detail: reportDetail(report),
+      balance: calculateCargoReportsBalance([report]),
+    }));
 
 /**
  * Groups any set of reports into per-month balances, oldest month first.

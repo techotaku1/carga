@@ -13,11 +13,11 @@ import {
   setCargoReportPaid,
   updateCargoReport,
 } from './cargoReportsActions';
-import { calculateCargoReportsBalance } from './cargoReportsBalance';
+import { calculateCargoReportsBalance, monthsWithReports } from './cargoReportsBalance';
 import type { ReportSearchFilters } from './cargoReportsSearch';
 import { EMPTY_SEARCH_FILTERS, hasActiveFilters, searchReports } from './cargoReportsSearch';
-import { DashboardSkeleton } from './DashboardSkeleton';
-import { DayNavigator } from './DayNavigator';
+import { ReportsBoardSkeleton } from './DashboardSkeleton';
+import { MonthNavigator } from './MonthNavigator';
 import { todayIsoDate } from './reportDates';
 import { ReportDrawer } from './ReportDrawer';
 import { ReportForm } from './ReportForm';
@@ -41,7 +41,7 @@ export const ReportsBoard = () => {
   const tDashboard = useTranslations('Dashboard');
   const [reports, setReports] = useState<CargoReport[]>([]);
   const [hydrated, setHydrated] = useState(false);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingReport, setEditingReport] = useState<CargoReport | null>(null);
   const [filters, setFilters] = useState<ReportSearchFilters>(EMPTY_SEARCH_FILTERS);
@@ -60,14 +60,18 @@ export const ReportsBoard = () => {
     void loadReports();
   }, []);
 
-  const recordDays = [...new Set(reports.map((report) => report.date))].toSorted();
-  const latestDay = recordDays.at(-1);
-  const activeDay =
-    selectedDay && recordDays.includes(selectedDay) ? selectedDay : (latestDay ?? todayIsoDate());
-  const dayIndex = recordDays.indexOf(activeDay);
-  const previousDay = dayIndex > 0 ? recordDays[dayIndex - 1] : undefined;
-  const nextDay =
-    dayIndex !== -1 && dayIndex < recordDays.length - 1 ? recordDays[dayIndex + 1] : undefined;
+  const recordMonths = monthsWithReports(reports);
+  const latestMonth = recordMonths.at(-1);
+  const activeMonth =
+    selectedMonth && recordMonths.includes(selectedMonth)
+      ? selectedMonth
+      : (latestMonth ?? todayIsoDate().slice(0, 7));
+  const monthIndex = recordMonths.indexOf(activeMonth);
+  const previousMonth = monthIndex > 0 ? recordMonths[monthIndex - 1] : undefined;
+  const nextMonth =
+    monthIndex !== -1 && monthIndex < recordMonths.length - 1
+      ? recordMonths[monthIndex + 1]
+      : undefined;
 
   const closeDrawer = () => {
     setDrawerOpen(false);
@@ -106,7 +110,7 @@ export const ReportsBoard = () => {
 
   const handleSubmitReport = (report: CargoReport) => {
     const previousReport = reports.find((existing) => existing.id === report.id);
-    setSelectedDay(report.date);
+    setSelectedMonth(report.date.slice(0, 7));
     closeDrawer();
 
     if (previousReport) {
@@ -154,37 +158,39 @@ export const ReportsBoard = () => {
   };
 
   if (!hydrated) {
-    return <DashboardSkeleton label={tDashboard('loading_label')} />;
+    return <ReportsBoardSkeleton label={tDashboard('loading_label')} />;
   }
 
   const searchActive = hasActiveFilters(filters);
   const searchResults = searchActive ? searchReports(reports, filters) : [];
-  const dayReports = reports.filter((report) => report.date === activeDay);
-  const dayBalance = calculateCargoReportsBalance(dayReports);
+  const monthReports = reports
+    .filter((report) => report.date.startsWith(activeMonth))
+    .toSorted((left, right) => left.date.localeCompare(right.date));
+  const monthBalance = calculateCargoReportsBalance(monthReports);
   const resultsNet = calculateCargoReportsBalance(searchResults).totalNet;
 
   return (
     <div className="flex flex-col gap-6">
       {!searchActive && (
-        <DayNavigator
-          day={activeDay}
-          loadCount={dayBalance.loadCount}
-          dayNet={dayBalance.totalNet}
-          hasPrevious={previousDay !== undefined}
-          hasNext={nextDay !== undefined}
-          onPrevious={() => {
-            if (previousDay) {
-              setSelectedDay(previousDay);
+        <MonthNavigator
+          hasNext={nextMonth !== undefined}
+          hasPrevious={previousMonth !== undefined}
+          loadCount={monthBalance.loadCount}
+          month={activeMonth}
+          monthNet={monthBalance.totalNet}
+          onLatest={() => {
+            if (latestMonth) {
+              setSelectedMonth(latestMonth);
             }
           }}
           onNext={() => {
-            if (nextDay) {
-              setSelectedDay(nextDay);
+            if (nextMonth) {
+              setSelectedMonth(nextMonth);
             }
           }}
-          onLatest={() => {
-            if (latestDay) {
-              setSelectedDay(latestDay);
+          onPrevious={() => {
+            if (previousMonth) {
+              setSelectedMonth(previousMonth);
             }
           }}
         />
@@ -222,7 +228,7 @@ export const ReportsBoard = () => {
           </p>
         )}
         <ReportsTable
-          reports={searchActive ? searchResults : dayReports}
+          reports={searchActive ? searchResults : monthReports}
           onDelete={handleDelete}
           onPaidChange={handlePaidChange}
           onEdit={(report) => {

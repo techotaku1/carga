@@ -45,9 +45,17 @@ export const PeriodBalanceTable = (props: {
         </thead>
         <tbody>
           {props.entries.map((entry) => (
-            <tr className="border-b border-gray-200 text-gray-900 last:border-0" key={entry.period}>
-              <td className={`${firstCol} font-bold text-[#0c2434] capitalize`}>
-                {props.formatPeriod(entry.period)}
+            <tr
+              className="border-b border-gray-200 text-gray-900 last:border-0"
+              key={entry.id ?? entry.period}
+            >
+              <td className={firstCol}>
+                <span className="block font-bold text-[#0c2434] capitalize">
+                  {props.formatPeriod(entry.period)}
+                </span>
+                {entry.detail && (
+                  <span className="block text-xs text-[#64748b]">{entry.detail}</span>
+                )}
               </td>
               <td className={`${col} tabular-nums`}>{entry.balance.loadCount}</td>
               <td className={`${col} text-gray-900 tabular-nums`}>

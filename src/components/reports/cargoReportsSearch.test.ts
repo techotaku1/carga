@@ -62,6 +62,36 @@ describe('cargoReportsSearch', () => {
       expect(result.map((item) => item.id)).toStrictEqual(['c', 'b']);
     });
 
+    it('filters monthly ranges with inclusive month boundaries', () => {
+      const result = searchReports(
+        [
+          report({ id: 'start', date: '2026-07-01' }),
+          report({ id: 'end', date: '2026-07-31' }),
+          report({ id: 'outside', date: '2026-08-01' }),
+        ],
+        { ...EMPTY_SEARCH_FILTERS, from: '2026-07', to: '2026-07' },
+        'month',
+      );
+
+      expect(result.map((item) => item.id)).toStrictEqual(['end', 'start']);
+    });
+
+    it('filters across multiple monthly bounds', () => {
+      const result = searchReports(
+        reports,
+        { ...EMPTY_SEARCH_FILTERS, from: '2026-07', to: '2026-08' },
+        'month',
+      );
+
+      expect(result.map((item) => item.id)).toStrictEqual(['c', 'b', 'a']);
+    });
+
+    it('clears a monthly range with empty filters', () => {
+      expect(
+        searchReports(reports, EMPTY_SEARCH_FILTERS, 'month').map((item) => item.id),
+      ).toStrictEqual(['c', 'b', 'a']);
+    });
+
     it('combines text and date filters', () => {
       const result = searchReports(reports, {
         query: 'nql417',

@@ -95,9 +95,11 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1">
-          <label htmlFor="driverPayment" className={labelClass}>
-            {t('field_driver_payment')}
-          </label>
+          <div className="flex min-h-7 items-center">
+            <label htmlFor="driverPayment" className={labelClass}>
+              {t('field_driver_payment')}
+            </label>
+          </div>
           <CurrencyInput
             id="driverPayment"
             control={props.control}
@@ -107,7 +109,7 @@ export const ReportMoneyFields = (props: { control: Control<ReportFormValues> })
         </div>
 
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
+          <div className="flex min-h-7 items-center gap-2">
             <input
               aria-label={t('other_cost_label_edit')}
               className="min-w-0 flex-1 rounded-md border border-transparent bg-transparent px-1 py-0.5 text-sm font-medium text-gray-700 hover:border-gray-300 focus:border-[#0c2434] focus:bg-white focus:outline-none"

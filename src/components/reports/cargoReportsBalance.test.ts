@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import type { CargoReport } from './CargoReport';
 import {
   calculateCargoReportsBalance,
-  dailyBalancesForMonth,
   filterReportsByMonth,
   filterReportsByRange,
   monthlyBalancesForYear,
   monthsWithReports,
+  reportBalances,
   yearsWithReports,
 } from './cargoReportsBalance';
 
@@ -132,13 +132,29 @@ describe('yearsWithReports', () => {
   });
 });
 
-describe('dailyBalancesForMonth', () => {
-  it('breaks a month into per-day balances, oldest first', () => {
-    const result = dailyBalancesForMonth(reports, '2026-06');
+describe('reportBalances', () => {
+  it('lists one entry per report inside a month, oldest first', () => {
+    const result = reportBalances(reports, '2026-06');
 
-    expect(result.map((entry) => entry.period)).toEqual(['2026-06-05', '2026-06-10']);
+    expect(result.map((entry) => entry.id)).toEqual(['1', '2']);
     expect(result[0]?.balance.totalNet).toBe(820_000);
     expect(result[1]?.balance.totalNet).toBe(430_000);
+  });
+
+  it('keeps reports of the same day on separate entries', () => {
+    const sameDay = reports
+      .filter((report) => report.date.startsWith('2026-06'))
+      .map((report) => ({ ...report, date: '2026-06-05' }));
+    const result = reportBalances(sameDay);
+
+    expect(result).toHaveLength(2);
+    expect(result.every((entry) => entry.balance.loadCount === 1)).toBe(true);
+  });
+
+  it('describes each entry with its plate, load number, company and driver', () => {
+    const [entry] = reportBalances(reports, '2026-07');
+
+    expect(entry?.detail).toBe('NQL417 · L-003 · Beta · Carlos');
   });
 });
 

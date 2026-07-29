@@ -11,16 +11,15 @@ import type { CargoReport } from './CargoReport';
 import { listCargoReports } from './cargoReportsActions';
 import {
   calculateCargoReportsBalance,
-  dailyBalances,
-  dailyBalancesForMonth,
   monthlyBalances,
   monthlyBalancesForYear,
   monthsWithReports,
+  reportBalances,
   yearsWithReports,
 } from './cargoReportsBalance';
 import type { ReportSearchFilters } from './cargoReportsSearch';
 import { EMPTY_SEARCH_FILTERS, hasActiveFilters, searchReports } from './cargoReportsSearch';
-import { DashboardSkeleton } from './DashboardSkeleton';
+import { BalanceBoardSkeleton } from './DashboardSkeleton';
 import { PeriodBalanceTable } from './PeriodBalanceTable';
 import { todayIsoDate } from './reportDates';
 import { ReportsSearch } from './ReportsSearch';
@@ -61,11 +60,12 @@ export const BalanceBoard = () => {
   }, []);
 
   if (!hydrated) {
-    return <DashboardSkeleton label={tDashboard('loading_label')} />;
+    return <BalanceBoardSkeleton label={tDashboard('loading_label')} />;
   }
 
   const searchActive = hasActiveFilters(filters);
-  const filteredReports = searchActive ? searchReports(reports, filters) : reports;
+  const searchRangeUnit = mode === 'monthly' ? 'month' : 'day';
+  const filteredReports = searchActive ? searchReports(reports, filters, searchRangeUnit) : reports;
 
   const months = monthsWithReports(reports);
   const years = yearsWithReports(reports);
@@ -96,10 +96,9 @@ export const BalanceBoard = () => {
   const totalsBalance = calculateCargoReportsBalance(searchActive ? filteredReports : reports);
 
   const getEntries = () => {
+    // Daily view lists every report on its own row instead of one row per day.
     if (isDaily) {
-      return searchActive
-        ? dailyBalances(filteredReports)
-        : dailyBalancesForMonth(reports, activeMonth);
+      return searchActive ? reportBalances(filteredReports) : reportBalances(reports, activeMonth);
     }
 
     return searchActive
@@ -124,12 +123,6 @@ export const BalanceBoard = () => {
         </Link>
         <h1 className="text-xl font-bold text-gray-900">{t('balance_title')}</h1>
       </div>
-
-      <BalanceTotals balance={totalsBalance} />
-
-      <section className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <ReportsSearch filters={filters} onFiltersChange={setFilters} />
-      </section>
 
       <div className="flex flex-wrap gap-2">
         {MODES.map((value) => (
@@ -190,6 +183,16 @@ export const BalanceBoard = () => {
             previousLabel={t('previous_year')}
           />
         ))}
+
+      <BalanceTotals balance={totalsBalance} />
+
+      <section className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+        <ReportsSearch
+          filters={filters}
+          onFiltersChange={setFilters}
+          rangeUnit={mode === 'monthly' ? 'month' : 'day'}
+        />
+      </section>
 
       <PeriodBalanceTable
         emptyLabel={t('empty_balance')}
