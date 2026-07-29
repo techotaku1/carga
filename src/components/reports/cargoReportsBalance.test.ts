@@ -4,10 +4,8 @@ import {
   calculateCargoReportsBalance,
   filterReportsByMonth,
   filterReportsByRange,
-  monthlyBalancesForYear,
   monthsWithReports,
   reportBalances,
-  yearsWithReports,
 } from './cargoReportsBalance';
 
 const reports: CargoReport[] = [
@@ -126,12 +124,6 @@ describe('monthsWithReports', () => {
   });
 });
 
-describe('yearsWithReports', () => {
-  it('lists unique years oldest first', () => {
-    expect(yearsWithReports(reports)).toEqual(['2026']);
-  });
-});
-
 describe('reportBalances', () => {
   it('lists one entry per report inside a month, oldest first', () => {
     const result = reportBalances(reports, '2026-06');
@@ -155,15 +147,5 @@ describe('reportBalances', () => {
     const [entry] = reportBalances(reports, '2026-07');
 
     expect(entry?.detail).toBe('NQL417 · L-003 · Beta · Carlos');
-  });
-});
-
-describe('monthlyBalancesForYear', () => {
-  it('breaks a year into per-month balances, oldest first', () => {
-    const result = monthlyBalancesForYear(reports, '2026');
-
-    expect(result.map((entry) => entry.period)).toEqual(['2026-06', '2026-07']);
-    expect(result[0]?.balance.totalNet).toBe(1_250_000);
-    expect(result[1]?.balance.totalNet).toBe(850_000);
   });
 });

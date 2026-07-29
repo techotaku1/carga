@@ -11,10 +11,8 @@ import type { CargoReport } from './CargoReport';
 import { listCargoReports } from './cargoReportsActions';
 import {
   calculateCargoReportsBalance,
-  monthlyBalances,
-  monthlyBalancesForYear,
+  monthsWithReports,
   reportBalances,
-  yearsWithReports,
 } from './cargoReportsBalance';
 import type { ReportSearchFilters } from './cargoReportsSearch';
 import { EMPTY_SEARCH_FILTERS, hasActiveFilters, searchReports } from './cargoReportsSearch';
@@ -42,7 +40,7 @@ export const BalanceBoard = () => {
   // The balance opens on the monthly overview; daily is the drill-down.
   const [mode, setMode] = useState<BalanceMode>('monthly');
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [filters, setFilters] = useState<ReportSearchFilters>({
     ...EMPTY_SEARCH_FILTERS,
     rangeUnit: 'month',
@@ -72,16 +70,16 @@ export const BalanceBoard = () => {
   const days = [
     ...new Set(reports.flatMap((report) => (report.date ? [report.date] : []))),
   ].toSorted();
-  const years = yearsWithReports(reports);
-  // Daily opens on the most recent day that actually has a record.
+  const months = monthsWithReports(reports);
+  // Each mode opens on the most recent period that actually has a record.
   const activeDay =
     selectedDay && days.includes(selectedDay) ? selectedDay : (days.at(-1) ?? todayIsoDate());
-  const activeYear =
-    selectedYear && years.includes(selectedYear)
-      ? selectedYear
-      : (years.at(-1) ?? todayIsoDate().slice(0, 4));
+  const activeMonth =
+    selectedMonth && months.includes(selectedMonth)
+      ? selectedMonth
+      : (months.at(-1) ?? todayIsoDate().slice(0, 7));
 
-  const monthShortFormatter = new Intl.DateTimeFormat(locale, { month: 'long' });
+  const monthLongFormatter = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
   const dayFormatter = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     day: 'numeric',
@@ -93,8 +91,8 @@ export const BalanceBoard = () => {
     month: 'long',
     year: 'numeric',
   });
-  const formatMonthName = (period: string) =>
-    monthShortFormatter.format(new Date(`${period}-01T00:00:00`));
+  const formatMonth = (period: string) =>
+    monthLongFormatter.format(new Date(`${period}-01T00:00:00`));
   const formatDay = (period: string) => dayFormatter.format(new Date(`${period}T00:00:00`));
   const formatDayLong = (period: string) => dayLongFormatter.format(new Date(`${period}T00:00:00`));
 
@@ -102,23 +100,21 @@ export const BalanceBoard = () => {
   // Top totals show the all-time balance, or the filtered set when searching.
   const totalsBalance = calculateCargoReportsBalance(searchActive ? filteredReports : reports);
 
+  // Both modes list every report on its own row; only the period they cover changes.
   const getEntries = () => {
-    // Daily view lists every report on its own row instead of one row per day.
-    if (isDaily) {
-      return reportBalances(
-        searchActive ? filteredReports : reports.filter((report) => report.date === activeDay),
-      );
+    if (searchActive) {
+      return reportBalances(filteredReports);
     }
 
-    return searchActive
-      ? monthlyBalances(filteredReports)
-      : monthlyBalancesForYear(reports, activeYear);
+    return isDaily
+      ? reportBalances(reports.filter((report) => report.date === activeDay))
+      : reportBalances(reports, activeMonth);
   };
 
   const previousDay = shiftInList(days, activeDay, -1);
   const nextDay = shiftInList(days, activeDay, 1);
-  const previousYear = shiftInList(years, activeYear, -1);
-  const nextYear = shiftInList(years, activeYear, 1);
+  const previousMonth = shiftInList(months, activeMonth, -1);
+  const nextMonth = shiftInList(months, activeMonth, 1);
 
   return (
     <div className="flex flex-col gap-4">
@@ -175,21 +171,21 @@ export const BalanceBoard = () => {
         ) : (
           <BalanceNavigator
             eyebrow={t('monthly_eyebrow')}
-            hasNext={nextYear !== undefined}
-            hasPrevious={previousYear !== undefined}
-            label={activeYear}
-            nextLabel={t('next_year')}
+            hasNext={nextMonth !== undefined}
+            hasPrevious={previousMonth !== undefined}
+            label={formatMonth(activeMonth)}
+            nextLabel={t('next_month')}
             onNext={() => {
-              if (nextYear) {
-                setSelectedYear(nextYear);
+              if (nextMonth) {
+                setSelectedMonth(nextMonth);
               }
             }}
             onPrevious={() => {
-              if (previousYear) {
-                setSelectedYear(previousYear);
+              if (previousMonth) {
+                setSelectedMonth(previousMonth);
               }
             }}
-            previousLabel={t('previous_year')}
+            previousLabel={t('previous_month')}
           />
         ))}
 
@@ -202,8 +198,8 @@ export const BalanceBoard = () => {
       <PeriodBalanceTable
         emptyLabel={t('empty_balance')}
         entries={getEntries()}
-        formatPeriod={isDaily ? formatDay : formatMonthName}
-        periodHeader={isDaily ? t('column_day') : t('column_month')}
+        formatPeriod={formatDay}
+        periodHeader={t('column_day')}
       />
     </div>
   );

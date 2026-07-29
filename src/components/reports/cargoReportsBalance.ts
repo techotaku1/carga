@@ -109,53 +109,6 @@ export const monthsWithReports = (reports: CargoReport[]): string[] =>
     ),
   ].toSorted();
 
-/**
- * Lists the unique years (yyyy) that have at least one report, oldest first.
- * @param reports - The reports to inspect.
- * @returns The sorted list of years with data.
- */
-export const yearsWithReports = (reports: CargoReport[]): string[] =>
-  [
-    ...new Set(
-      reports.flatMap((report) => {
-        const year = report.date.slice(0, 4);
-
-        return year ? [year] : [];
-      }),
-    ),
-  ].toSorted();
-
-const groupBalances = (
-  reports: CargoReport[],
-  periodOf: (report: CargoReport) => string,
-): PeriodBalance[] => {
-  const groups = new Map<string, CargoReport[]>();
-
-  for (const report of reports) {
-    const period = periodOf(report);
-    const bucket = groups.get(period) ?? [];
-    bucket.push(report);
-    groups.set(period, bucket);
-  }
-
-  return [...groups.keys()].toSorted().map((period) => ({
-    period,
-    balance: calculateCargoReportsBalance(groups.get(period) ?? []),
-  }));
-};
-
-/**
- * Computes a per-month balance for every month with data inside the given year.
- * @param reports - The reports to summarize.
- * @param year - The year to break down, in yyyy format.
- * @returns The per-month balances, oldest month first.
- */
-export const monthlyBalancesForYear = (reports: CargoReport[], year: string): PeriodBalance[] =>
-  groupBalances(
-    reports.filter((report) => report.date.slice(0, 4) === year),
-    (report) => report.date.slice(0, 7),
-  );
-
 const reportDetail = (report: CargoReport) =>
   [report.plate, report.loadNumber, report.company, report.driver].filter(Boolean).join(' · ');
 
@@ -175,14 +128,3 @@ export const reportBalances = (reports: CargoReport[], month?: string): PeriodBa
       detail: reportDetail(report),
       balance: calculateCargoReportsBalance([report]),
     }));
-
-/**
- * Groups any set of reports into per-month balances, oldest month first.
- * @param reports - The reports to summarize.
- * @returns The per-month balances.
- */
-export const monthlyBalances = (reports: CargoReport[]): PeriodBalance[] =>
-  groupBalances(
-    reports.filter((report) => Boolean(report.date)),
-    (report) => report.date.slice(0, 7),
-  );
