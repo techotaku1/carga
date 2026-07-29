@@ -13,7 +13,6 @@ import {
   calculateCargoReportsBalance,
   monthlyBalances,
   monthlyBalancesForYear,
-  monthsWithReports,
   reportBalances,
   yearsWithReports,
 } from './cargoReportsBalance';
@@ -26,7 +25,7 @@ import { ReportsSearch } from './ReportsSearch';
 
 type BalanceMode = 'daily' | 'monthly';
 
-const MODES: BalanceMode[] = ['daily', 'monthly'];
+const MODES: BalanceMode[] = ['monthly', 'daily'];
 
 const shiftInList = (list: string[], current: string, offset: number) => {
   const index = list.indexOf(current);
@@ -40,10 +39,14 @@ export const BalanceBoard = () => {
   const locale = useLocale();
   const [reports, setReports] = useState<CargoReport[]>([]);
   const [hydrated, setHydrated] = useState(false);
-  const [mode, setMode] = useState<BalanceMode>('daily');
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
+  // The balance opens on the monthly overview; daily is the drill-down.
+  const [mode, setMode] = useState<BalanceMode>('monthly');
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string | null>(null);
-  const [filters, setFilters] = useState<ReportSearchFilters>(EMPTY_SEARCH_FILTERS);
+  const [filters, setFilters] = useState<ReportSearchFilters>({
+    ...EMPTY_SEARCH_FILTERS,
+    rangeUnit: 'month',
+  });
 
   useEffect(() => {
     const loadReports = async () => {
@@ -64,32 +67,36 @@ export const BalanceBoard = () => {
   }
 
   const searchActive = hasActiveFilters(filters);
-  const searchRangeUnit = mode === 'monthly' ? 'month' : 'day';
-  const filteredReports = searchActive ? searchReports(reports, filters, searchRangeUnit) : reports;
+  const filteredReports = searchActive ? searchReports(reports, filters) : reports;
 
-  const months = monthsWithReports(reports);
+  const days = [
+    ...new Set(reports.flatMap((report) => (report.date ? [report.date] : []))),
+  ].toSorted();
   const years = yearsWithReports(reports);
-  const activeMonth =
-    selectedMonth && months.includes(selectedMonth)
-      ? selectedMonth
-      : (months.at(-1) ?? todayIsoDate().slice(0, 7));
+  // Daily opens on the most recent day that actually has a record.
+  const activeDay =
+    selectedDay && days.includes(selectedDay) ? selectedDay : (days.at(-1) ?? todayIsoDate());
   const activeYear =
     selectedYear && years.includes(selectedYear)
       ? selectedYear
       : (years.at(-1) ?? todayIsoDate().slice(0, 4));
 
-  const monthDateFormatter = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' });
   const monthShortFormatter = new Intl.DateTimeFormat(locale, { month: 'long' });
   const dayFormatter = new Intl.DateTimeFormat(locale, {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
   });
-  const formatMonth = (period: string) =>
-    monthDateFormatter.format(new Date(`${period}-01T00:00:00`));
+  const dayLongFormatter = new Intl.DateTimeFormat(locale, {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
   const formatMonthName = (period: string) =>
     monthShortFormatter.format(new Date(`${period}-01T00:00:00`));
   const formatDay = (period: string) => dayFormatter.format(new Date(`${period}T00:00:00`));
+  const formatDayLong = (period: string) => dayLongFormatter.format(new Date(`${period}T00:00:00`));
 
   const isDaily = mode === 'daily';
   // Top totals show the all-time balance, or the filtered set when searching.
@@ -98,7 +105,9 @@ export const BalanceBoard = () => {
   const getEntries = () => {
     // Daily view lists every report on its own row instead of one row per day.
     if (isDaily) {
-      return searchActive ? reportBalances(filteredReports) : reportBalances(reports, activeMonth);
+      return reportBalances(
+        searchActive ? filteredReports : reports.filter((report) => report.date === activeDay),
+      );
     }
 
     return searchActive
@@ -106,8 +115,8 @@ export const BalanceBoard = () => {
       : monthlyBalancesForYear(reports, activeYear);
   };
 
-  const previousMonth = shiftInList(months, activeMonth, -1);
-  const nextMonth = shiftInList(months, activeMonth, 1);
+  const previousDay = shiftInList(days, activeDay, -1);
+  const nextDay = shiftInList(days, activeDay, 1);
   const previousYear = shiftInList(years, activeYear, -1);
   const nextYear = shiftInList(years, activeYear, 1);
 
@@ -147,21 +156,21 @@ export const BalanceBoard = () => {
         (isDaily ? (
           <BalanceNavigator
             eyebrow={t('daily_eyebrow')}
-            hasNext={nextMonth !== undefined}
-            hasPrevious={previousMonth !== undefined}
-            label={formatMonth(activeMonth)}
-            nextLabel={t('next_month')}
+            hasNext={nextDay !== undefined}
+            hasPrevious={previousDay !== undefined}
+            label={formatDayLong(activeDay)}
+            nextLabel={t('next_day')}
             onNext={() => {
-              if (nextMonth) {
-                setSelectedMonth(nextMonth);
+              if (nextDay) {
+                setSelectedDay(nextDay);
               }
             }}
             onPrevious={() => {
-              if (previousMonth) {
-                setSelectedMonth(previousMonth);
+              if (previousDay) {
+                setSelectedDay(previousDay);
               }
             }}
-            previousLabel={t('previous_month')}
+            previousLabel={t('previous_day')}
           />
         ) : (
           <BalanceNavigator
@@ -187,11 +196,7 @@ export const BalanceBoard = () => {
       <BalanceTotals balance={totalsBalance} />
 
       <section className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-        <ReportsSearch
-          filters={filters}
-          onFiltersChange={setFilters}
-          rangeUnit={mode === 'monthly' ? 'month' : 'day'}
-        />
+        <ReportsSearch filters={filters} onFiltersChange={setFilters} />
       </section>
 
       <PeriodBalanceTable

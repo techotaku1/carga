@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import type { CargoReport } from './CargoReport';
-import { EMPTY_SEARCH_FILTERS, hasActiveFilters, searchReports } from './cargoReportsSearch';
+import {
+  EMPTY_SEARCH_FILTERS,
+  hasActiveFilters,
+  hasInvertedRange,
+  searchReports,
+} from './cargoReportsSearch';
 
 const report = (overrides: Partial<CargoReport>): CargoReport => ({
   id: 'id',
@@ -40,6 +45,38 @@ describe('cargoReportsSearch', () => {
     it('returns true when a date bound is set', () => {
       expect(hasActiveFilters({ ...EMPTY_SEARCH_FILTERS, from: '2026-07-01' })).toBe(true);
     });
+
+    it('returns false when only the range unit changed', () => {
+      expect(hasActiveFilters({ ...EMPTY_SEARCH_FILTERS, rangeUnit: 'month' })).toBe(false);
+    });
+  });
+
+  describe('hasInvertedRange', () => {
+    it('detects a start month later than the end month', () => {
+      expect(
+        hasInvertedRange({
+          ...EMPTY_SEARCH_FILTERS,
+          from: '2026-08',
+          rangeUnit: 'month',
+          to: '2026-07',
+        }),
+      ).toBe(true);
+    });
+
+    it('accepts a single month as both bounds', () => {
+      expect(
+        hasInvertedRange({
+          ...EMPTY_SEARCH_FILTERS,
+          from: '2026-07',
+          rangeUnit: 'month',
+          to: '2026-07',
+        }),
+      ).toBe(false);
+    });
+
+    it('ignores an open bound', () => {
+      expect(hasInvertedRange({ ...EMPTY_SEARCH_FILTERS, from: '2026-08-02' })).toBe(false);
+    });
   });
 
   describe('searchReports', () => {
@@ -54,7 +91,7 @@ describe('cargoReportsSearch', () => {
 
     it('filters by date range inclusively', () => {
       const result = searchReports(reports, {
-        query: '',
+        ...EMPTY_SEARCH_FILTERS,
         from: '2026-07-06',
         to: '2026-08-02',
       });
@@ -69,34 +106,63 @@ describe('cargoReportsSearch', () => {
           report({ id: 'end', date: '2026-07-31' }),
           report({ id: 'outside', date: '2026-08-01' }),
         ],
-        { ...EMPTY_SEARCH_FILTERS, from: '2026-07', to: '2026-07' },
-        'month',
+        { ...EMPTY_SEARCH_FILTERS, from: '2026-07', rangeUnit: 'month', to: '2026-07' },
       );
 
       expect(result.map((item) => item.id)).toStrictEqual(['end', 'start']);
     });
 
     it('filters across multiple monthly bounds', () => {
-      const result = searchReports(
-        reports,
-        { ...EMPTY_SEARCH_FILTERS, from: '2026-07', to: '2026-08' },
-        'month',
-      );
+      const result = searchReports(reports, {
+        ...EMPTY_SEARCH_FILTERS,
+        from: '2026-07',
+        rangeUnit: 'month',
+        to: '2026-08',
+      });
 
       expect(result.map((item) => item.id)).toStrictEqual(['c', 'b', 'a']);
     });
 
     it('clears a monthly range with empty filters', () => {
       expect(
-        searchReports(reports, EMPTY_SEARCH_FILTERS, 'month').map((item) => item.id),
+        searchReports(reports, { ...EMPTY_SEARCH_FILTERS, rangeUnit: 'month' }).map(
+          (item) => item.id,
+        ),
       ).toStrictEqual(['c', 'b', 'a']);
+    });
+
+    it('filters a weekly range from monday to sunday', () => {
+      const week = [
+        report({ id: 'sunday-before', date: '2026-06-28' }),
+        report({ id: 'monday', date: '2026-06-29' }),
+        report({ id: 'sunday', date: '2026-07-05' }),
+        report({ id: 'monday-after', date: '2026-07-06' }),
+      ];
+      const result = searchReports(week, {
+        ...EMPTY_SEARCH_FILTERS,
+        from: '2026-W27',
+        rangeUnit: 'week',
+        to: '2026-W27',
+      });
+
+      expect(result.map((item) => item.id)).toStrictEqual(['sunday', 'monday']);
+    });
+
+    it('returns nothing when the range is inverted', () => {
+      const result = searchReports(reports, {
+        ...EMPTY_SEARCH_FILTERS,
+        from: '2026-08-02',
+        to: '2026-07-01',
+      });
+
+      expect(result).toStrictEqual([]);
     });
 
     it('combines text and date filters', () => {
       const result = searchReports(reports, {
-        query: 'nql417',
+        ...EMPTY_SEARCH_FILTERS,
         from: '2026-07-02',
-        to: '',
+        query: 'nql417',
       });
 
       expect(result.map((item) => item.id)).toStrictEqual(['b']);

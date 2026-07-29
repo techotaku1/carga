@@ -65,10 +65,10 @@
     "balance_title": "Balance",
     "tab_daily": "Daily",
     "tab_monthly": "Monthly",
-    "daily_eyebrow": "Month",
+    "daily_eyebrow": "Day",
     "monthly_eyebrow": "Year",
-    "previous_month": "Previous month",
-    "next_month": "Next month",
+    "previous_day": "Previous day",
+    "next_day": "Next day",
     "previous_year": "Previous year",
     "next_year": "Next year",
     "column_day": "Day",
@@ -96,7 +96,12 @@
     "driver_modal_title": "Create driver",
     "driver_name_label": "Driver name",
     "driver_cancel": "Cancel",
-    "driver_create": "Create driver"
+    "driver_create": "Create driver",
+    "search_range_unit": "Range by",
+    "search_unit_day": "Day",
+    "search_unit_week": "Week",
+    "search_unit_month": "Month",
+    "search_range_invalid": "The start date is later than the end date"
   },
   "UserProfile": {
     "meta_title": "User Profile"

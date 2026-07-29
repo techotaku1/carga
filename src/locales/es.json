@@ -65,10 +65,10 @@
     "balance_title": "Balance",
     "tab_daily": "Diario",
     "tab_monthly": "Mensual",
-    "daily_eyebrow": "Mes",
+    "daily_eyebrow": "Día",
     "monthly_eyebrow": "Año",
-    "previous_month": "Mes anterior",
-    "next_month": "Mes siguiente",
+    "previous_day": "Día anterior",
+    "next_day": "Día siguiente",
     "previous_year": "Año anterior",
     "next_year": "Año siguiente",
     "column_day": "Día",
@@ -96,7 +96,12 @@
     "driver_modal_title": "Crear conductor",
     "driver_name_label": "Nombre del conductor",
     "driver_cancel": "Cancelar",
-    "driver_create": "Crear conductor"
+    "driver_create": "Crear conductor",
+    "search_range_unit": "Rango por",
+    "search_unit_day": "Día",
+    "search_unit_week": "Semana",
+    "search_unit_month": "Mes",
+    "search_range_invalid": "La fecha inicial es posterior a la final"
   },
   "UserProfile": {
     "meta_title": "Perfil de usuario"
