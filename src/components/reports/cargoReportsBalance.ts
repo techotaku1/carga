@@ -113,7 +113,7 @@ const reportDetail = (report: CargoReport) =>
   [report.plate, report.loadNumber, report.company, report.driver].filter(Boolean).join(' · ');
 
 /**
- * Lists one balance row per report, without grouping, oldest first.
+ * Lists one balance row per report, without grouping, newest first.
  * @param reports - The reports to break down.
  * @param month - Optional month filter, in yyyy-mm format.
  * @returns One entry per report, each carrying its own id and detail.
@@ -121,7 +121,7 @@ const reportDetail = (report: CargoReport) =>
 export const reportBalances = (reports: CargoReport[], month?: string): PeriodBalance[] =>
   reports
     .filter((report) => Boolean(report.date) && (!month || report.date.slice(0, 7) === month))
-    .toSorted((left, right) => left.date.localeCompare(right.date))
+    .toSorted((left, right) => right.date.localeCompare(left.date))
     .map((report) => ({
       id: report.id,
       period: report.date,

@@ -79,7 +79,8 @@ export const ReportsBoard = () => {
   };
 
   const createReport = (report: CargoReport) => {
-    setReports((previous) => [...previous, report]);
+    // Prepending keeps a brand new report on top of same-day entries once the list is sorted.
+    setReports((previous) => [report, ...previous]);
 
     const persistReport = async () => {
       try {
@@ -165,7 +166,7 @@ export const ReportsBoard = () => {
   const searchResults = searchActive ? searchReports(reports, filters) : [];
   const monthReports = reports
     .filter((report) => report.date.startsWith(activeMonth))
-    .toSorted((left, right) => left.date.localeCompare(right.date));
+    .toSorted((left, right) => right.date.localeCompare(left.date));
   const monthBalance = calculateCargoReportsBalance(monthReports);
   const resultsNet = calculateCargoReportsBalance(searchResults).totalNet;
 

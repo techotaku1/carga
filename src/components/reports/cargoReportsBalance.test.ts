@@ -125,12 +125,12 @@ describe('monthsWithReports', () => {
 });
 
 describe('reportBalances', () => {
-  it('lists one entry per report inside a month, oldest first', () => {
+  it('lists one entry per report inside a month, newest first', () => {
     const result = reportBalances(reports, '2026-06');
 
-    expect(result.map((entry) => entry.id)).toEqual(['1', '2']);
-    expect(result[0]?.balance.totalNet).toBe(820_000);
-    expect(result[1]?.balance.totalNet).toBe(430_000);
+    expect(result.map((entry) => entry.id)).toEqual(['2', '1']);
+    expect(result[0]?.balance.totalNet).toBe(430_000);
+    expect(result[1]?.balance.totalNet).toBe(820_000);
   });
 
   it('keeps reports of the same day on separate entries', () => {
