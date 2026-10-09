@@ -59,7 +59,7 @@ type ReportsTableText = {
   paidUpdateError: string;
 };
 
-export type ReportsTableMeta = {
+type ReportsTableMeta = {
   text: ReportsTableText;
   otherCostHeader: string;
   pendingPaidIds: Set<string>;

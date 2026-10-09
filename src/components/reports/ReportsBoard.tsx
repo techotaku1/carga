@@ -52,9 +52,9 @@ export const ReportsBoard = () => {
         setReports(await listCargoReports());
       } catch (error) {
         logger.error(`Failed to load cargo reports: ${String(error)}`);
-      } finally {
-        setHydrated(true);
       }
+
+      setHydrated(true);
     };
 
     void loadReports();

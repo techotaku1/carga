@@ -7,7 +7,7 @@ import react from 'ultracite/oxlint/react';
 
 export default defineConfig({
   extends: [core, react, next, jsPlugins],
-  ignorePatterns: ['.agents/**', '.claude/**'],
+  ignorePatterns: ['.agents/**', '.claude/**', '.continue/**'],
   rules: {
     'no-warning-comments': 'off', // Allow TODO and FIXME comments
     'no-inline-comments': 'off', // Allow nearby comments
@@ -40,7 +40,15 @@ export default defineConfig({
     'sonarjs/todo-tag': 'off',
 
     'react/jsx-handler-names': 'off',
-    'react/react-compiler': 'off',
+
+    // Pages and layouts use `export default async function`, matching the Next.js docs; components elsewhere are arrows.
+    'react/function-component-definition': 'off',
+
+    // Hydration-safe pattern: browser-only localStorage values (driver list, other-cost label) are read after mount.
+    'react/set-state-in-effect': 'off',
+
+    // react-hook-form `watch` and TanStack Table return unmemoizable functions; React Compiler skips those components safely.
+    'react/incompatible-library': 'off',
 
     'react-doctor/js-combine-iterations': 'off',
     'react-doctor/js-hoist-intl': 'off',
@@ -58,6 +66,13 @@ export default defineConfig({
     'jsdoc/require-returns': 'error',
     'jsdoc/require-returns-description': 'error',
   },
+  overrides: [
+    {
+      // Route modules must export metadata, `generateMetadata` and route config next to the default component.
+      files: ['src/app/**/*.{ts,tsx}'],
+      rules: { 'react-doctor/only-export-components': 'off' },
+    },
+  ],
   options: {
     reportUnusedDisableDirectives: 'error',
   },

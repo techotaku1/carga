@@ -64,7 +64,7 @@ const weekEnd = (value: string) => {
  * @param unit - The granularity the value was entered with.
  * @returns The inclusive lower bound as yyyy-mm-dd, or an empty string when unset.
  */
-export const rangeStart = (value: string, unit: SearchRangeUnit) => {
+const rangeStart = (value: string, unit: SearchRangeUnit) => {
   if (value === '') {
     return '';
   }
@@ -82,7 +82,7 @@ export const rangeStart = (value: string, unit: SearchRangeUnit) => {
  * @param unit - The granularity the value was entered with.
  * @returns The inclusive upper bound as yyyy-mm-dd, or an empty string when unset.
  */
-export const rangeEnd = (value: string, unit: SearchRangeUnit) => {
+const rangeEnd = (value: string, unit: SearchRangeUnit) => {
   if (value === '') {
     return '';
   }

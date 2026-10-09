@@ -21,7 +21,6 @@ export const DriverSelect = (props: { form: UseFormReturn<ReportFormValues> }) =
   const [drivers, setDrivers] = useState<string[]>(DEFAULT_DRIVERS);
   const [modalOpen, setModalOpen] = useState(false);
   const selectedDriver = form.watch('driver');
-  const driverField = form.register('driver');
 
   useEffect(() => {
     setDrivers(loadDrivers());
@@ -51,11 +50,9 @@ export const DriverSelect = (props: { form: UseFormReturn<ReportFormValues> }) =
         <FiUser className={iconClass} aria-hidden="true" />
         <select
           id="driver"
-          name={driverField.name}
-          ref={driverField.ref}
+          {...form.register('driver')}
           value={selectedDriver}
           className={selectClass}
-          onBlur={driverField.onBlur}
           onChange={(event) => {
             if (event.target.value === ADD_DRIVER_VALUE) {
               setModalOpen(true);

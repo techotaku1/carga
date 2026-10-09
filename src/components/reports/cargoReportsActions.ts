@@ -34,25 +34,23 @@ export const listCargoReports = async (): Promise<CargoReport[]> => {
     .where(eq(cargoReportsSchema.userId, userId))
     .orderBy(asc(cargoReportsSchema.date));
 
-  return rows.map(
-    (row): CargoReport => ({
-      id: row.id,
-      plate: row.plate,
-      date: row.date,
-      loadNumber: row.loadNumber,
-      company: row.company,
-      city: row.city,
-      driver: row.driver,
-      note: row.note,
-      fullValue: row.fullValue,
-      extraProfit: row.extraProfit,
-      fuelCost: row.fuelCost,
-      tollCost: row.tollCost,
-      otherCost: row.otherCost,
-      driverPayment: row.driverPayment,
-      paid: row.paid,
-    }),
-  );
+  return rows.map((row): CargoReport => ({
+    id: row.id,
+    plate: row.plate,
+    date: row.date,
+    loadNumber: row.loadNumber,
+    company: row.company,
+    city: row.city,
+    driver: row.driver,
+    note: row.note,
+    fullValue: row.fullValue,
+    extraProfit: row.extraProfit,
+    fuelCost: row.fuelCost,
+    tollCost: row.tollCost,
+    otherCost: row.otherCost,
+    driverPayment: row.driverPayment,
+    paid: row.paid,
+  }));
 };
 
 /**
