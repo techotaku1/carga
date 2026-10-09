@@ -13,7 +13,7 @@ const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   cacheComponents: true,
-  partialPrefetching: false, // Enabled in the partial prefetching step
+  partialPrefetching: true,
   typedRoutes: true,
   reactCompiler: true,
   agentRules: false, // Agent instructions live only in CLAUDE.md
