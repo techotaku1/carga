@@ -4,6 +4,10 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/libs/I18nRouting';
 import '@/styles/global.css';
 
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function RootLayout(props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;

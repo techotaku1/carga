@@ -12,7 +12,17 @@ const baseConfig: NextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
+  cacheComponents: true,
+  partialPrefetching: false, // Enabled in the partial prefetching step
+  typedRoutes: true,
+  reactCompiler: true,
+  agentRules: false, // Agent instructions live only in CLAUDE.md
+  experimental: {
+    turbopackRustReactCompiler: true,
+    turbopackGc: true,
+    turbopackLazyDynamicImports: true,
+    agentUpgrade: 'latest',
+  },
   logging: {
     browserToTerminal: process.env.BROWSER_TO_TERMINAL_DISABLED !== 'true',
   },
@@ -21,9 +31,6 @@ const baseConfig: NextConfig = {
   },
   turbopack: {
     root: projectRoot,
-    resolveAlias: {
-      '@arcjet/analyze-wasm': './node_modules/@arcjet/analyze-wasm/dist/edge-light.js',
-    },
   },
 };
 

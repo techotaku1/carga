@@ -39,7 +39,7 @@
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-table": "^8.21.3",
     "drizzle-orm": "^1.0.0-rc.3",
-    "next": "^16.3.6",
+    "next": "^16.4.0",
     "next-intl": "^4.14.7",
     "pg": "^8.23.0",
     "react": "^19.3.0",
@@ -56,7 +56,7 @@
     "@electric-sql/pglite-socket": "^0.2.11",
     "@faker-js/faker": "^10.6.0",
     "@lingual/i18n-check": "^0.9.5",
-    "@next/bundle-analyzer": "^16.3.6",
+    "@next/bundle-analyzer": "^16.4.0",
     "@playwright/test": "^1.63.0",
     "@storybook/addon-a11y": "^10.6.0",
     "@storybook/addon-docs": "^10.6.0",
@@ -71,7 +71,6 @@
     "@vitest/browser": "^4.1.11",
     "@vitest/browser-playwright": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
-    "babel-plugin-react-compiler": "^1.0.0",
     "checkly": "^9.5.0",
     "cross-env": "^10.1.0",
     "dotenv-cli": "^11.0.0",
@@ -89,19 +88,19 @@
     "storybook": "^10.6.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "ultracite": "^7.9.4",
+    "ultracite": "~7.10.8",
     "vitest": "^4.1.11",
     "vitest-browser-react": "^2.3.0"
   },
   "overrides": {
-    "esbuild": "^0.28.1",
-    "fast-uri": "^3.1.2",
-    "postcss": "^8.5.16",
-    "vitest": "^4.1.11",
     "@vitest/browser": "^4.1.11",
     "@vitest/browser-playwright": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.11",
-    "@vitest/mocker": "^4.1.11"
+    "@vitest/mocker": "^4.1.11",
+    "esbuild": "^0.28.1",
+    "fast-uri": "^3.1.2",
+    "postcss": "^8.5.16",
+    "vitest": "^4.1.11"
   },
   "release": {
     "branches": [
