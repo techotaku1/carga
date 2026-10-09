@@ -72,6 +72,11 @@ export default defineConfig({
       files: ['src/app/**/*.{ts,tsx}'],
       rules: { 'react-doctor/only-export-components': 'off' },
     },
+    {
+      // `'use cache'` functions must be async even when nothing is awaited.
+      files: ['src/app/sitemap.ts'],
+      rules: { 'eslint/require-await': 'off' },
+    },
   ],
   options: {
     reportUnusedDisableDirectives: 'error',

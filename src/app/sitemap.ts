@@ -1,8 +1,14 @@
 import type { MetadataRoute } from 'next';
+import { cacheLife } from 'next/cache';
 import { routing } from '@/libs/I18nRouting';
 import { getBaseUrl, getI18nPath } from '@/utils/Helpers';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// Cached so the sitemap stays prerendered; `lastModified` refreshes daily instead of per request.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  'use cache';
+
+  cacheLife('days');
+
   const baseUrl = getBaseUrl();
 
   const routes = ['', '/about', '/counter', '/portfolio'];

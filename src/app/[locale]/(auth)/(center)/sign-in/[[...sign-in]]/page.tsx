@@ -4,14 +4,17 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
 import { getI18nPath } from '@/utils/Helpers';
 
-// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
-// Remove this opt-out after verifying the segment passes validation without it.
-// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
-export const instant = false;
-
 type SignInPageProps = {
   params: Promise<{ locale: string }>;
 };
+
+/**
+ * Prerenders the base path of the catch-all segment; nested Clerk flow steps render on demand.
+ * @returns The static params for the optional catch-all segment.
+ */
+export function generateStaticParams() {
+  return [{ 'sign-in': [] }];
+}
 
 export async function generateMetadata(props: SignInPageProps): Promise<Metadata> {
   const { locale } = await props.params;
