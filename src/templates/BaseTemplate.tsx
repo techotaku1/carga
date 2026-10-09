@@ -1,6 +1,9 @@
 import { useTranslations } from 'next-intl';
 import { AppConfig } from '@/utils/AppConfig';
 
+// Evaluated once at module load: `Date` is impure during render and the footer year changes at most yearly.
+const currentYear = new Date().getFullYear();
+
 const renderFooterAuthor = () => (
   <a
     href="https://nextjs-boilerplate.com"
@@ -41,7 +44,7 @@ export const BaseTemplate = (props: {
 
         <footer className="border-t border-gray-300 py-8 text-center text-sm">
           {t.rich('footer_text', {
-            year: new Date().getFullYear(),
+            year: currentYear,
             name: AppConfig.name,
             author: renderFooterAuthor,
           })}
